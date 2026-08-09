@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html lang="ku" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ڕەیان و فەرزاد | کاتژمێری مانەوە</title>
   <style>
     * {
@@ -21,9 +21,9 @@
       padding: 20px;
       margin: 0;
       position: relative;
+      overflow-x: hidden;
     }
 
-    /* ناوچەی سەرەکی */
     .container {
       position: relative;
       z-index: 10;
@@ -48,7 +48,6 @@
       letter-spacing: 3px;
       margin-bottom: 15px;
       text-align: center;
-      word-break: break-word;
     }
 
     .title-sub {
@@ -57,10 +56,6 @@
       font-weight: 400;
       margin-bottom: 25px;
       text-shadow: 0 0 18px #faa307;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
     }
 
     .countdown-panel {
@@ -115,8 +110,35 @@
       text-shadow: 0 0 18px #f39c12;
     }
 
+    .music-btn {
+      background: linear-gradient(135deg, #ffb703, #fb8500);
+      border: none;
+      color: #0a0a1a;
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 12px 28px;
+      border-radius: 40px;
+      margin: 15px 0 10px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(255, 170, 0, 0.5);
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+    }
+
+    .music-btn:hover {
+      background: linear-gradient(135deg, #ffa500, #ff6d00);
+      box-shadow: 0 0 40px rgba(255, 140, 0, 0.8);
+      transform: scale(1.05);
+    }
+
+    .music-btn.playing {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      box-shadow: 0 0 30px rgba(46, 204, 113, 0.6);
+    }
+
     .footer-img {
-      margin-top: 20px;
+      margin-top: 15px;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -141,14 +163,8 @@
     .planet {
       position: absolute;
       border-radius: 50%;
-      box-shadow: 0 0 35px rgba(255, 255, 200, 0.6);
       z-index: 1;
       pointer-events: none;
-    }
-
-    .earth-style {
-      background: radial-gradient(circle at 30% 30%, #2b6f9c, #0b3b5e);
-      box-shadow: 0 0 45px #3b8ec2, 0 0 20px #1b4f72;
     }
 
     .planet-1 {
@@ -174,8 +190,8 @@
       height: 140px;
       top: 15%;
       right: 7%;
-      background: radial-gradient(circle at 30% 30%, #4d6b53, #1e3b28);
-      box-shadow: 0 0 70px #6e8f5e;
+      background: radial-gradient(circle at 30% 30%, #2b6f9c, #0b3b5e);
+      box-shadow: 0 0 70px #3b8ec2;
     }
 
     .planet-4 {
@@ -185,17 +201,6 @@
       left: 12%;
       background: radial-gradient(circle at 40% 40%, #d6b17e, #7a5a3a);
       box-shadow: 0 0 35px #daa06a;
-    }
-
-    /* ئەستێرە بچووکەکان */
-    .stars {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      pointer-events: none;
     }
 
     @media (max-width: 550px) {
@@ -209,20 +214,14 @@
   </style>
 </head>
 <body>
-  <!-- دەنگی پاشبنەما: YouTube (خۆکار دەستپێدەکات) -->
-  <iframe id="music-frame" width="0" height="0" 
-          src="https://www.youtube.com/embed/9AXyX555ZoU?autoplay=1&loop=1&playlist=9AXyX555ZoU&controls=0&showinfo=0&mute=0&rel=0&enablejsapi=1"
-          style="position:absolute;top:-9999px;left:-9999px;visibility:hidden;width:0;height:0;" 
-          allow="autoplay" 
-          allowfullscreen
-          frameborder="0">
-  </iframe>
 
-  <!-- ئەستێرەکان و هەسارەکان لە پاشبنەما -->
-  <div class="stars" id="stars-container"></div>
+  <!-- ئەستێرەکان -->
+  <canvas id="stars-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+
+  <!-- هەسارەکان -->
   <div class="planet planet-1"></div>
   <div class="planet planet-2"></div>
-  <div class="planet planet-3 earth-style"></div>
+  <div class="planet planet-3"></div>
   <div class="planet planet-4"></div>
 
   <div class="container">
@@ -248,113 +247,181 @@
       </div>
     </div>
 
+    <!-- دوگمەی موزیک -->
+    <button class="music-btn" id="music-toggle" onclick="toggleMusic()">🔊 پەخشی موزیک</button>
+
     <div class="footer-img">
-      <!-- وێنەی گیت هەب: لینکی ڕاستەوخۆ بۆ IMG_8805.png -->
       <img src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_8805.png" 
            alt="Rayan Farzad image" 
            crossorigin="anonymous"
-           onerror="this.style.display='none'; console.log('وێنە بار نەبوو، دڵنیابە لە ڕێڕەوەکە')">
+           onerror="this.style.display='none';">
     </div>
   </div>
 
+  <!-- Audio element بۆ موزیک -->
+  <audio id="bg-music" loop preload="auto" style="display:none;">
+    <source src="https://docs.google.com/uc?export=download&id=1X3ZQ8KqYkht7Y6GnNwHjLs2F9RmVbPcW" type="audio/mpeg">
+  </audio>
+
   <script>
-    (function() {
-      // ڕێکەوتی ئامانج: 12/12/2026 (مانگی 12، ڕۆژی 12، ساڵی 2026)
-      // فۆرمات: مانگ/ڕۆژ/ساڵ -> new Date(year, monthIndex, day, hours, minutes, seconds)
-      // monthIndex = 11 بۆ کانونی یەکەم (12)
-      const targetDate = new Date(2026, 11, 12, 0, 0, 0); // 12/12/2026 00:00:00
+    // ========== ئەستێرەکانی پاشبنەما ==========
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-      // توخمەکانی نمایش
-      const daysEl = document.getElementById('days');
-      const hoursEl = document.getElementById('hours');
-      const minutesEl = document.getElementById('minutes');
-      const secondsEl = document.getElementById('seconds');
+    const stars = [];
+    for (let i = 0; i < 120; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2.2 + 0.6,
+        opacity: Math.random(),
+        speed: Math.random() * 0.02 + 0.005,
+        direction: Math.random() < 0.5 ? 1 : -1
+      });
+    }
 
-      function calculateRemaining() {
-        const now = new Date();
-        // جیاوازی بە ملی چرکە
-        let diffMs = targetDate - now;
-
-        // ئەگەر کاتی ئامانج تێپەڕیبێت، ڕێگری دەکەین لە ژمارەی نەرێنی
-        if (diffMs <= 0) {
-          daysEl.textContent = '00';
-          hoursEl.textContent = '00';
-          minutesEl.textContent = '00';
-          secondsEl.textContent = '00';
-          return;
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        star.opacity += star.speed * star.direction;
+        if (star.opacity >= 0.9 || star.opacity <= 0.15) {
+          star.direction *= -1;
         }
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 250, 210, ${star.opacity})`;
+        ctx.fill();
+        ctx.shadowColor = '#fff9c4';
+        ctx.shadowBlur = star.radius * 4;
+      });
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
 
-        // گۆڕینی بۆ چرکە، دەقە، سەعات، ڕۆژ
-        const totalSeconds = Math.floor(diffMs / 1000);
-        const days = Math.floor(totalSeconds / (60 * 60 * 24));
-        const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-        const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-        const seconds = totalSeconds % 60;
+    // ========== کاتژمێری مانەوە ==========
+    const targetDate = new Date(2026, 11, 12, 0, 0, 0); // 12/12/2026
+    
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
 
-        // زیادکردنی سیفر لە پێشەوە ئەگەر ژمارە تاکە
-        daysEl.textContent = days < 10 ? '0' + days : days;
-        hoursEl.textContent = hours < 10 ? '0' + hours : hours;
-        minutesEl.textContent = minutes < 10 ? '0' + minutes : minutes;
-        secondsEl.textContent = seconds < 10 ? '0' + seconds : seconds;
+    function calculateRemaining() {
+      const now = new Date();
+      let diffMs = targetDate - now;
+
+      if (diffMs <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        return;
       }
 
-      // یەکەم جار جێبەجێکردن و دواتر هەر چرکەیەک
-      calculateRemaining();
-      const timerInterval = setInterval(calculateRemaining, 1000);
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const days = Math.floor(totalSeconds / (60 * 60 * 24));
+      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
 
-      // دروستکردنی ئەستێرە بچووکەکان بۆ پاشبنەما
-      function createStars() {
-        const starsContainer = document.getElementById('stars-container');
-        if (!starsContainer) return;
-        starsContainer.innerHTML = '';
-        const starCount = 90;
-        for (let i = 0; i < starCount; i++) {
-          const star = document.createElement('div');
-          const size = Math.random() * 3.5 + 1.2;
-          star.style.position = 'absolute';
-          star.style.left = Math.random() * 100 + '%';
-          star.style.top = Math.random() * 100 + '%';
-          star.style.width = size + 'px';
-          star.style.height = size + 'px';
-          star.style.backgroundColor = '#fffde7';
-          star.style.borderRadius = '50%';
-          star.style.boxShadow = '0 0 ' + (Math.random() * 7 + 3) + 'px #fff9c4';
-          star.style.opacity = Math.random() * 0.9 + 0.2;
-          star.style.animation = `twinkle ${Math.random() * 4 + 3}s infinite alternate`;
-          starsContainer.appendChild(star);
+      daysEl.textContent = days < 10 ? '0' + days : days;
+      hoursEl.textContent = hours < 10 ? '0' + hours : hours;
+      minutesEl.textContent = minutes < 10 ? '0' + minutes : minutes;
+      secondsEl.textContent = seconds < 10 ? '0' + seconds : seconds;
+    }
+
+    calculateRemaining();
+    const timerInterval = setInterval(calculateRemaining, 1000);
+
+    // ========== موزیک ==========
+    const audio = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('music-toggle');
+    let musicPlaying = false;
+
+    // YouTube audio stream (ڕاستەوخۆ)
+    // بەکارهێنانی YouTube audio downloader proxy
+    const youtubeAudioUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://www.youtube.com/watch?v=9AXyX555ZoU');
+    
+    // بەڵام بۆ ئەوەی ڕاستەوخۆ کار بکات، ئێمە لینکی ڕاستەوخۆی ئەو دەنگە بەکاردەهێنین
+    // کە لە YouTube Audio Library وەرگیراوە یان لینکی پرۆکسی
+    // باشترین ڕێگا: بەکارهێنانی لینکی ڕاستەوخۆ
+    const directAudioUrl = 'https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/raw/main/audio/background.mp3';
+    
+    // ئەگەر فایلی دەنگ لە گیتهاب دانرابێت
+    function setAudioSource() {
+      // هەوڵدانی بارکردنی فایلی دەنگ لە گیتهاب (ئەگەر هەبێت)
+      audio.src = directAudioUrl;
+      audio.load();
+      
+      // ئەگەر سەرچاوەکە کار نەکات، لینکی پاشەکەوت بەکاربهێنە
+      audio.addEventListener('error', function() {
+        // بەکارهێنانی پرۆکسی بۆ YouTube
+        audio.src = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://www.youtube.com/watch?v=9AXyX555ZoU');
+        audio.load();
+      });
+    }
+
+    setAudioSource();
+
+    function toggleMusic() {
+      if (musicPlaying) {
+        audio.pause();
+        musicBtn.textContent = '🔇 پەخشی موزیک';
+        musicBtn.classList.remove('playing');
+        musicPlaying = false;
+      } else {
+        // Play music
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            musicBtn.textContent = '🎵 موزیک بڕە';
+            musicBtn.classList.add('playing');
+            musicPlaying = true;
+          }).catch(error => {
+            console.log('پەخش شکستی هێنا، تکایە دووبارە هەوڵبدە');
+            // هەوڵدانەوە بە دەستی بەکارهێنەر
+            audio.play().then(() => {
+              musicBtn.textContent = '🎵 موزیک بڕە';
+              musicBtn.classList.add('playing');
+              musicPlaying = true;
+            }).catch(e => {
+              alert('بۆ پەخشی موزیک، تکایە یەکەم جار کرتە لەسەر دوگمەکە بکە!');
+            });
+          });
         }
       }
+    }
 
-      // ئەنیمەیشنی ئەستێرەکان
-      const styleSheet = document.createElement("style");
-      styleSheet.textContent = `
-        @keyframes twinkle {
-          0% { opacity: 0.3; transform: scale(0.9); }
-          100% { opacity: 0.95; transform: scale(1.2); }
-        }
-      `;
-      document.head.appendChild(styleSheet);
-      createStars();
+    // هەوڵدانی پەخشی خۆکار (بەڵام وێبگەڕەکان ڕێگری دەکەن)
+    window.addEventListener('load', function() {
+      // هەوڵدانی پەخشی خۆکار - زۆربەی وێبگەڕەکان ڕێگە نادەن
+      const autoPlayPromise = audio.play();
+      if (autoPlayPromise !== undefined) {
+        autoPlayPromise.then(() => {
+          musicBtn.textContent = '🎵 موزیک بڕە';
+          musicBtn.classList.add('playing');
+          musicPlaying = true;
+        }).catch(() => {
+          // خۆکار پەخش نەبوو، چاوەڕێی کرتەی بەکارهێنەر
+          musicBtn.textContent = '🔊 پەخشی موزیک';
+          musicPlaying = false;
+        });
+      }
+    });
 
-      // زیادکردنی دڵنیایی بۆ ئۆتۆپلەی موزیک (سیاسەتی وێبگەڕ ڕێگەپێدراوی ئۆتۆماتیک نییە بەڵام هەوڵدەدەین)
-      window.addEventListener('load', function() {
-        const iframe = document.getElementById('music-frame');
-        // هەندێک جار پێویستە دووبارە بارکردنی ئایفرەیم بۆ ئۆتۆپلەی
-        if (iframe) {
-          // دووبارە ڕێکخستنی سەرچاوە بۆ دڵنیابوون (بێ گۆڕینی سیاسەت)
-          const currentSrc = iframe.src;
-          iframe.src = currentSrc;
-        }
-        // هەوڵی دەستپێکردنی دەنگ لە ڕێگەی API ی YouTube (ئەگەر بارکرابێت)
-        // بەڵام بە سادەیی ئایفرەیم work دەکات
-      });
+    // پاکردنەوە
+    window.addEventListener('beforeunload', function() {
+      clearInterval(timerInterval);
+      audio.pause();
+    });
 
-      // پاکردنەوەی ئینتێرڤال لە کاتی داخستنی پەڕە (باشترە)
-      window.addEventListener('beforeunload', function() {
-        clearInterval(timerInterval);
-      });
-
-    })();
   </script>
 </body>
 </html>
