@@ -1,403 +1,360 @@
 <!DOCTYPE html>
-<html lang="ckb" dir="rtl">
+<html lang="ku">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ڕایان و فەرزاد - Countdown Timer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>ڕەیان و فەرزاد | کاتژمێری مانەوە</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background: linear-gradient(135deg, #0a0a2e, #1a1a4e, #0a0a2e);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            overflow-x: hidden;
-            position: relative;
-        }
+    body {
+      background: radial-gradient(ellipse at center, #0b0c1e 0%, #030514 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      padding: 20px;
+      margin: 0;
+      position: relative;
+    }
 
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+    /* ناوچەی سەرەکی */
+    .container {
+      position: relative;
+      z-index: 10;
+      backdrop-filter: blur(16px);
+      background: rgba(10, 15, 35, 0.55);
+      border-radius: 48px;
+      padding: 30px 25px 25px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 700px;
+      width: 100%;
+      border: 1px solid rgba(255, 215, 0, 0.25);
+    }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite;
-        }
+    h1 {
+      color: #fbe9b1;
+      font-size: 2.6rem;
+      font-weight: 600;
+      text-shadow: 0 0 25px #ffb703, 0 0 8px #fb8500;
+      letter-spacing: 3px;
+      margin-bottom: 15px;
+      text-align: center;
+      word-break: break-word;
+    }
 
-        @keyframes twinkle {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.5);
-            }
-        }
+    .title-sub {
+      color: #f5d742;
+      font-size: 1.9rem;
+      font-weight: 400;
+      margin-bottom: 25px;
+      text-shadow: 0 0 18px #faa307;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 20px;
-        }
+    .countdown-panel {
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      border-radius: 80px;
+      padding: 20px 25px;
+      margin: 5px 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      border: 1px solid #ffd966;
+      box-shadow: 0 10px 30px rgba(255, 200, 0, 0.3);
+    }
 
-        .title {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
-            animation: glow 2s ease-in-out infinite alternate;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    .time-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 70px;
+    }
 
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-            }
-            to {
-                text-shadow: 0 0 30px rgba(138, 43, 226, 1), 0 0 60px rgba(138, 43, 226, 0.5);
-            }
-        }
+    .time-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #fff7e6;
+      text-shadow: 0 0 20px #ffaa00, 0 0 8px #ff7b00;
+      line-height: 1;
+    }
 
-        .countdown-container {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
+    .time-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #fedb9f;
+      margin-top: 5px;
+    }
 
-        .countdown-item {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            min-width: 150px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+    .small-seconds {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      margin-left: 5px;
+    }
 
-        .countdown-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
+    .seconds-number {
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: #ffd966;
+      text-shadow: 0 0 18px #f39c12;
+    }
 
-        .countdown-number {
-            font-size: 4rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
+    .footer-img {
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      border-radius: 30px;
+      overflow: hidden;
+      background: rgba(20, 20, 40, 0.5);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255, 215, 0, 0.4);
+    }
 
-        .countdown-label {
-            font-size: 1.2rem;
-            color: #ccc;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+    .footer-img img {
+      width: 100%;
+      height: auto;
+      max-height: 180px;
+      object-fit: contain;
+      display: block;
+      background: #0a0a14;
+      border-radius: 24px;
+    }
 
-        .countdown-seconds {
-            font-size: 1.5rem;
-            color: #ffd700;
-            margin-top: 10px;
-            animation: pulse 1s infinite;
-        }
+    /* هەسارەکان */
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      box-shadow: 0 0 35px rgba(255, 255, 200, 0.6);
+      z-index: 1;
+      pointer-events: none;
+    }
 
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.7;
-                transform: scale(1.05);
-            }
-        }
+    .earth-style {
+      background: radial-gradient(circle at 30% 30%, #2b6f9c, #0b3b5e);
+      box-shadow: 0 0 45px #3b8ec2, 0 0 20px #1b4f72;
+    }
 
-        .logo-container {
-            margin-top: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            max-width: 200px;
-        }
+    .planet-1 {
+      width: 110px;
+      height: 110px;
+      top: 8%;
+      left: 5%;
+      background: radial-gradient(circle at 35% 35%, #c97e4b, #6b3e1e);
+      box-shadow: 0 0 60px #d97823;
+    }
 
-        .logo-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
+    .planet-2 {
+      width: 75px;
+      height: 75px;
+      bottom: 12%;
+      right: 4%;
+      background: radial-gradient(circle at 40% 40%, #b0a48b, #5d5340);
+      box-shadow: 0 0 45px #c4ad7c;
+    }
 
-        .music-control {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            padding: 10px 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
+    .planet-3 {
+      width: 140px;
+      height: 140px;
+      top: 15%;
+      right: 7%;
+      background: radial-gradient(circle at 30% 30%, #4d6b53, #1e3b28);
+      box-shadow: 0 0 70px #6e8f5e;
+    }
 
-        .music-control:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
+    .planet-4 {
+      width: 50px;
+      height: 50px;
+      bottom: 18%;
+      left: 12%;
+      background: radial-gradient(circle at 40% 40%, #d6b17e, #7a5a3a);
+      box-shadow: 0 0 35px #daa06a;
+    }
 
-        .target-date {
-            font-size: 1.2rem;
-            margin-top: 30px;
-            color: #aaa;
-            text-align: center;
-        }
+    /* ئەستێرە بچووکەکان */
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-        @media (max-width: 768px) {
-            .countdown-container {
-                gap: 15px;
-            }
-            
-            .countdown-item {
-                padding: 20px;
-                min-width: 120px;
-            }
-            
-            .countdown-number {
-                font-size: 2.5rem;
-            }
-            
-            .title {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    @media (max-width: 550px) {
+      .time-number {
+        font-size: 2.2rem;
+      }
+      .container {
+        padding: 20px 15px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <button class="music-control" onclick="toggleMusic()" id="musicBtn">
-        🎵 پەخشکردن/راوەستاندنی موزیک
-    </button>
+  <!-- دەنگی پاشبنەما: YouTube (خۆکار دەستپێدەکات) -->
+  <iframe id="music-frame" width="0" height="0" 
+          src="https://www.youtube.com/embed/9AXyX555ZoU?autoplay=1&loop=1&playlist=9AXyX555ZoU&controls=0&showinfo=0&mute=0&rel=0&enablejsapi=1"
+          style="position:absolute;top:-9999px;left:-9999px;visibility:hidden;width:0;height:0;" 
+          allow="autoplay" 
+          allowfullscreen
+          frameborder="0">
+  </iframe>
 
-    <div class="stars" id="stars"></div>
+  <!-- ئەستێرەکان و هەسارەکان لە پاشبنەما -->
+  <div class="stars" id="stars-container"></div>
+  <div class="planet planet-1"></div>
+  <div class="planet planet-2"></div>
+  <div class="planet planet-3 earth-style"></div>
+  <div class="planet planet-4"></div>
 
-    <div class="container">
-        <h1 class="title">ڕایان و فەرزاد</h1>
-        
-        <div class="countdown-container">
-            <div class="countdown-item">
-                <div class="countdown-number" id="days">00</div>
-                <div class="countdown-label">ڕۆژ</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="hours">00</div>
-                <div class="countdown-label">سەعات</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="minutes">00</div>
-                <div class="countdown-label">دەقە</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="seconds">00</div>
-                <div class="countdown-label">چرکە</div>
-            </div>
-        </div>
+  <div class="container">
+    <h1>ڕەیان فەرزاد</h1>
+    <div class="title-sub">✨ تا 12/12/2026 ✨</div>
 
-        <div class="countdown-seconds" id="total-seconds">کۆی گشتی: 0 چرکە</div>
-        
-        <div class="target-date">ماوە تاکو 12/12/2026</div>
-
-        <div class="logo-container">
-            <img src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_8805.png" 
-                 alt="Logo" 
-                 onerror="this.style.display='none'">
-        </div>
+    <div class="countdown-panel" id="countdown">
+      <div class="time-block">
+        <span class="time-number" id="days">00</span>
+        <span class="time-label">ڕۆژ</span>
+      </div>
+      <div class="time-block">
+        <span class="time-number" id="hours">00</span>
+        <span class="time-label">سەعات</span>
+      </div>
+      <div class="time-block">
+        <span class="time-number" id="minutes">00</span>
+        <span class="time-label">دەقە</span>
+      </div>
+      <div class="time-block small-seconds">
+        <span class="seconds-number" id="seconds">00</span>
+        <span class="time-label" style="margin-left:2px;">چرکە</span>
+      </div>
     </div>
 
-    <iframe id="youtube-player" 
-            style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0;" 
-            src="https://www.youtube.com/embed/9AXyX555ZoU?autoplay=1&loop=1&playlist=9AXyX555ZoU&controls=0"
-            allow="autoplay; encrypted-media" 
-            allowfullscreen>
-    </iframe>
+    <div class="footer-img">
+      <!-- وێنەی گیت هەب: لینکی ڕاستەوخۆ بۆ IMG_8805.png -->
+      <img src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_8805.png" 
+           alt="Rayan Farzad image" 
+           crossorigin="anonymous"
+           onerror="this.style.display='none'; console.log('وێنە بار نەبوو، دڵنیابە لە ڕێڕەوەکە')">
+    </div>
+  </div>
 
-    <script>
-        // Create stars
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = Math.random() * 3 + 'px';
-                star.style.height = star.style.width;
-                star.style.animationDelay = Math.random() * 2 + 's';
-                starsContainer.appendChild(star);
-            }
+  <script>
+    (function() {
+      // ڕێکەوتی ئامانج: 12/12/2026 (مانگی 12، ڕۆژی 12، ساڵی 2026)
+      // فۆرمات: مانگ/ڕۆژ/ساڵ -> new Date(year, monthIndex, day, hours, minutes, seconds)
+      // monthIndex = 11 بۆ کانونی یەکەم (12)
+      const targetDate = new Date(2026, 11, 12, 0, 0, 0); // 12/12/2026 00:00:00
+
+      // توخمەکانی نمایش
+      const daysEl = document.getElementById('days');
+      const hoursEl = document.getElementById('hours');
+      const minutesEl = document.getElementById('minutes');
+      const secondsEl = document.getElementById('seconds');
+
+      function calculateRemaining() {
+        const now = new Date();
+        // جیاوازی بە ملی چرکە
+        let diffMs = targetDate - now;
+
+        // ئەگەر کاتی ئامانج تێپەڕیبێت، ڕێگری دەکەین لە ژمارەی نەرێنی
+        if (diffMs <= 0) {
+          daysEl.textContent = '00';
+          hoursEl.textContent = '00';
+          minutesEl.textContent = '00';
+          secondsEl.textContent = '00';
+          return;
         }
 
-        // Create planets
-        function createPlanets() {
-            const style = document.createElement('style');
-            style.textContent = `
-                .planet {
-                    position: fixed;
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 0;
-                    opacity: 0.6;
-                }
-                
-                .earth {
-                    position: fixed;
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 0;
-                    background: radial-gradient(circle at 30% 30%, #4a90e2, #2e5a88 50%, #1a3a5c);
-                    box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
-                    animation: orbit 20s linear infinite;
-                    bottom: 10%;
-                    right: 10%;
-                }
-                
-                @keyframes orbit {
-                    from { transform: rotate(0deg) translateX(50px); }
-                    to { transform: rotate(360deg) translateX(50px); }
-                }
-                
-                .planet1 { 
-                    width: 40px; height: 40px; 
-                    background: radial-gradient(circle at 30% 30%, #ff7b7b, #cc5555);
-                    top: 15%; left: 10%;
-                    animation: float1 8s ease-in-out infinite;
-                }
-                .planet2 { 
-                    width: 30px; height: 30px; 
-                    background: radial-gradient(circle at 30% 30%, #7b9eff, #4a5ecc);
-                    top: 20%; right: 15%;
-                    animation: float2 10s ease-in-out infinite;
-                }
-                .planet3 { 
-                    width: 50px; height: 50px; 
-                    background: radial-gradient(circle at 30% 30%, #ffd700, #cc9900);
-                    bottom: 20%; left: 20%;
-                    animation: float3 12s ease-in-out infinite;
-                }
-                .planet4 { 
-                    width: 35px; height: 35px; 
-                    background: radial-gradient(circle at 30% 30%, #98fb98, #5ecc5e);
-                    bottom: 30%; right: 30%;
-                    animation: float4 9s ease-in-out infinite;
-                }
-                
-                @keyframes float1 {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-30px); }
-                }
-                @keyframes float2 {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-20px); }
-                }
-                @keyframes float3 {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-25px); }
-                }
-                @keyframes float4 {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-15px); }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            const planets = document.createElement('div');
-            planets.innerHTML = `
-                <div class="planet planet1"></div>
-                <div class="planet planet2"></div>
-                <div class="planet planet3"></div>
-                <div class="planet planet4"></div>
-                <div class="earth"></div>
-            `;
-            document.body.appendChild(planets);
-        }
+        // گۆڕینی بۆ چرکە، دەقە، سەعات، ڕۆژ
+        const totalSeconds = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSeconds / (60 * 60 * 24));
+        const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+        const seconds = totalSeconds % 60;
 
-        // Countdown logic
-        function updateCountdown() {
-            const targetDate = new Date('2026-12-12T00:00:00');
-            const now = new Date();
-            const difference = targetDate - now;
-            
-            if (difference <= 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                document.getElementById('total-seconds').textContent = 'کاتی گەیشتنە! 🎉';
-                return;
-            }
-            
-            const totalSeconds = Math.floor(difference / 1000);
-            const days = Math.floor(totalSeconds / (3600 * 24));
-            const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = Math.floor(totalSeconds % 60);
-            
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            
-            document.getElementById('total-seconds').textContent = 
-                `کۆی گشتی: ${totalSeconds.toLocaleString()} چرکە`;
-        }
+        // زیادکردنی سیفر لە پێشەوە ئەگەر ژمارە تاکە
+        daysEl.textContent = days < 10 ? '0' + days : days;
+        hoursEl.textContent = hours < 10 ? '0' + hours : hours;
+        minutesEl.textContent = minutes < 10 ? '0' + minutes : minutes;
+        secondsEl.textContent = seconds < 10 ? '0' + seconds : seconds;
+      }
 
-        // Music control
-        let musicPlaying = true;
-        function toggleMusic() {
-            const player = document.getElementById('youtube-player');
-            if (musicPlaying) {
-                player.src = player.src.replace('autoplay=1', 'autoplay=0');
-                document.getElementById('musicBtn').textContent = '🎵 دەستپێکردنی موزیک';
-            } else {
-                player.src = player.src.replace('autoplay=0', 'autoplay=1');
-                document.getElementById('musicBtn').textContent = '🎵 پەخشکردن/راوەستاندنی موزیک';
-            }
-            musicPlaying = !musicPlaying;
-        }
+      // یەکەم جار جێبەجێکردن و دواتر هەر چرکەیەک
+      calculateRemaining();
+      const timerInterval = setInterval(calculateRemaining, 1000);
 
-        // Initialize
-        createStars();
-        createPlanets();
-        
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-    </script>
+      // دروستکردنی ئەستێرە بچووکەکان بۆ پاشبنەما
+      function createStars() {
+        const starsContainer = document.getElementById('stars-container');
+        if (!starsContainer) return;
+        starsContainer.innerHTML = '';
+        const starCount = 90;
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('div');
+          const size = Math.random() * 3.5 + 1.2;
+          star.style.position = 'absolute';
+          star.style.left = Math.random() * 100 + '%';
+          star.style.top = Math.random() * 100 + '%';
+          star.style.width = size + 'px';
+          star.style.height = size + 'px';
+          star.style.backgroundColor = '#fffde7';
+          star.style.borderRadius = '50%';
+          star.style.boxShadow = '0 0 ' + (Math.random() * 7 + 3) + 'px #fff9c4';
+          star.style.opacity = Math.random() * 0.9 + 0.2;
+          star.style.animation = `twinkle ${Math.random() * 4 + 3}s infinite alternate`;
+          starsContainer.appendChild(star);
+        }
+      }
+
+      // ئەنیمەیشنی ئەستێرەکان
+      const styleSheet = document.createElement("style");
+      styleSheet.textContent = `
+        @keyframes twinkle {
+          0% { opacity: 0.3; transform: scale(0.9); }
+          100% { opacity: 0.95; transform: scale(1.2); }
+        }
+      `;
+      document.head.appendChild(styleSheet);
+      createStars();
+
+      // زیادکردنی دڵنیایی بۆ ئۆتۆپلەی موزیک (سیاسەتی وێبگەڕ ڕێگەپێدراوی ئۆتۆماتیک نییە بەڵام هەوڵدەدەین)
+      window.addEventListener('load', function() {
+        const iframe = document.getElementById('music-frame');
+        // هەندێک جار پێویستە دووبارە بارکردنی ئایفرەیم بۆ ئۆتۆپلەی
+        if (iframe) {
+          // دووبارە ڕێکخستنی سەرچاوە بۆ دڵنیابوون (بێ گۆڕینی سیاسەت)
+          const currentSrc = iframe.src;
+          iframe.src = currentSrc;
+        }
+        // هەوڵی دەستپێکردنی دەنگ لە ڕێگەی API ی YouTube (ئەگەر بارکرابێت)
+        // بەڵام بە سادەیی ئایفرەیم work دەکات
+      });
+
+      // پاکردنەوەی ئینتێرڤال لە کاتی داخستنی پەڕە (باشترە)
+      window.addEventListener('beforeunload', function() {
+        clearInterval(timerInterval);
+      });
+
+    })();
+  </script>
 </body>
 </html>
