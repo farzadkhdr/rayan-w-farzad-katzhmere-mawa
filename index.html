@@ -24,7 +24,6 @@
             position: relative;
         }
 
-        /* Stars */
         .stars {
             position: fixed;
             top: 0;
@@ -46,7 +45,6 @@
             100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Main card */
         .main-card {
             position: relative;
             z-index: 1;
@@ -75,7 +73,6 @@
             margin-bottom: 25px;
         }
 
-        /* Countdown grid */
         .countdown-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -107,7 +104,6 @@
         .box-minutes .number { color: #FF9800; }
         .box-seconds .number { color: #F44336; }
 
-        /* November */
         .november-box {
             font-size: 14px;
             color: #FF69B4;
@@ -118,16 +114,20 @@
             border: 1px solid rgba(255, 105, 180, 0.2);
         }
 
-        /* Planet image */
         .planet-img {
             width: 120px;
             height: auto;
             border-radius: 10px;
             opacity: 0.85;
             box-shadow: 0 0 20px rgba(100, 100, 255, 0.2);
+            animation: float 3s ease-in-out infinite;
         }
 
-        /* Music button */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
         .music-btn {
             position: fixed;
             bottom: 20px;
@@ -142,6 +142,7 @@
             z-index: 100;
             backdrop-filter: blur(5px);
             font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
+            transition: all 0.3s;
         }
 
         .music-btn:hover {
@@ -151,16 +152,49 @@
         .music-btn.playing {
             border-color: #4CAF50;
             color: #4CAF50;
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            color: #FFD700;
+            font-size: 18px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
+    <!-- Loading -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-text">🎵 ئامادەکردنی موزیک...</div>
+    </div>
+
     <!-- Stars -->
     <div class="stars" id="stars"></div>
 
-    <!-- Music -->
-    <audio id="bgMusic" loop preload="auto"></audio>
-    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵 دەستپێکردنی موزیک</button>
+    <!-- Music - using iframe trick for autoplay -->
+    <iframe id="musicFrame" style="display:none" allow="autoplay"></iframe>
+    <audio id="bgMusic" loop preload="auto" autoplay playsinline></audio>
+    
+    <button class="music-btn playing" id="musicBtn" onclick="toggleMusic()">🎵 موزیک ڕاهاتووە</button>
 
     <!-- Main card -->
     <div class="main-card">
@@ -197,6 +231,8 @@
     </div>
 
     <script>
+        const MUSIC_URL = 'https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3?raw=true';
+        
         // ============ STARS ============
         function createStars() {
             const container = document.getElementById('stars');
@@ -215,61 +251,116 @@
             }
         }
 
-        // ============ MUSIC ============
+        // ============ AUTO-PLAY MUSIC ============
         const audio = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
-        const MUSIC_URL = 'https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3?raw=true';
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        let isPlaying = false;
 
-        let musicLoaded = false;
-
-        function loadMusic() {
-            if (!musicLoaded) {
-                audio.src = MUSIC_URL;
-                audio.load();
-                musicLoaded = true;
-            }
+        function hideLoading() {
+            loadingOverlay.classList.add('hidden');
+            setTimeout(() => loadingOverlay.remove(), 500);
         }
 
-        function toggleMusic() {
-            loadMusic();
-            if (audio.paused) {
-                audio.play().then(() => {
-                    musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
-                    musicBtn.classList.add('playing');
-                }).catch(() => {
-                    musicBtn.textContent = '🎵 کرتە بکە بۆ موزیک';
-                });
+        function updateMusicButton() {
+            if (isPlaying) {
+                musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
+                musicBtn.classList.add('playing');
             } else {
-                audio.pause();
                 musicBtn.textContent = '🎵 دەستپێکردنی موزیک';
                 musicBtn.classList.remove('playing');
             }
         }
 
-        // Auto-play on first click anywhere
-        document.addEventListener('click', function autoPlay() {
-            loadMusic();
-            if (audio.paused) {
+        function playMusic() {
+            audio.src = MUSIC_URL;
+            audio.load();
+            
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    updateMusicButton();
+                    hideLoading();
+                }).catch(() => {
+                    // Try iframe method
+                    tryIframeAutoplay();
+                });
+            }
+        }
+
+        function tryIframeAutoplay() {
+            const iframe = document.getElementById('musicFrame');
+            iframe.src = `data:text/html,<html><body><script>
+                window.onload = function() {
+                    var a = new Audio('${MUSIC_URL}');
+                    a.loop = true;
+                    a.play().then(function() {
+                        window.parent.postMessage('music-playing', '*');
+                    }).catch(function() {
+                        window.parent.postMessage('music-failed', '*');
+                    });
+                };
+            <\/script></body></html>`;
+            
+            // Fallback: show button to click
+            setTimeout(() => {
+                if (!isPlaying) {
+                    isPlaying = false;
+                    updateMusicButton();
+                    hideLoading();
+                }
+            }, 2000);
+        }
+
+        // Listen for iframe messages
+        window.addEventListener('message', function(e) {
+            if (e.data === 'music-playing') {
+                isPlaying = true;
+                updateMusicButton();
+                hideLoading();
+                // Sync with main audio
+                audio.src = MUSIC_URL;
+                audio.load();
+                audio.play().catch(() => {});
+            } else if (e.data === 'music-failed') {
+                isPlaying = false;
+                updateMusicButton();
+                hideLoading();
+            }
+        });
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+            } else {
+                if (!audio.src) {
+                    audio.src = MUSIC_URL;
+                    audio.load();
+                }
                 audio.play().then(() => {
-                    musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
-                    musicBtn.classList.add('playing');
-                }).catch(() => {});
+                    isPlaying = true;
+                }).catch(() => {
+                    isPlaying = false;
+                });
+            }
+            updateMusicButton();
+        }
+
+        // Start immediately
+        playMusic();
+
+        // Also try on first user interaction
+        document.addEventListener('click', function initOnClick() {
+            if (!isPlaying) {
+                playMusic();
             }
         }, { once: false });
 
-        // Also try on load
-        window.addEventListener('load', () => {
-            loadMusic();
-            audio.play().then(() => {
-                musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
-                musicBtn.classList.add('playing');
-            }).catch(() => {
-                musicBtn.textContent = '🎵 کرتە بکە بۆ موزیک';
-            });
-        });
-
         // ============ COUNTDOWN ============
-        const TARGET = new Date(2026, 11, 12, 0, 0, 0); // 12 Dec 2026
+        const TARGET = new Date(2026, 11, 12, 0, 0, 0);
 
         function getNextNovember() {
             const now = new Date();
@@ -294,7 +385,6 @@
                 document.getElementById('seconds').textContent = Math.floor((diff % 60000) / 1000);
             }
 
-            // November
             const novTarget = getNextNovember();
             const novDiff = novTarget - now;
             const novDays = Math.floor(novDiff / 86400000);
