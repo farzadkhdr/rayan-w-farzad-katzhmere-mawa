@@ -128,6 +128,55 @@
             50% { transform: translateY(-5px); }
         }
 
+        /* Start overlay - the key to autoplay! */
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        .start-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .start-text {
+            color: #FFD700;
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
+        }
+
+        .start-subtext {
+            color: #aaa;
+            font-size: 16px;
+            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
+        }
+
         .music-btn {
             position: fixed;
             bottom: 20px;
@@ -154,45 +203,23 @@
             color: #4CAF50;
             background: rgba(76, 175, 80, 0.2);
         }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            transition: opacity 0.5s;
-        }
-
-        .loading-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-text {
-            color: #FFD700;
-            font-size: 18px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
-    <!-- Loading -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-text">🎵 ئامادەکردنی موزیک...</div>
+    <!-- Start overlay - one click starts everything! -->
+    <div class="start-overlay" id="startOverlay">
+        <div class="start-content">
+            <div class="start-icon">🚀</div>
+            <div class="start-text">کلیک بکە بۆ دەستپێکردن</div>
+            <div class="start-subtext">موزیک و کاژێری ماوە</div>
+        </div>
     </div>
 
     <!-- Stars -->
     <div class="stars" id="stars"></div>
 
-    <!-- Music - using iframe trick for autoplay -->
-    <iframe id="musicFrame" style="display:none" allow="autoplay"></iframe>
-    <audio id="bgMusic" loop preload="auto" autoplay playsinline></audio>
+    <!-- Music -->
+    <audio id="bgMusic" loop preload="auto"></audio>
     
     <button class="music-btn playing" id="musicBtn" onclick="toggleMusic()">🎵 موزیک ڕاهاتووە</button>
 
@@ -251,15 +278,31 @@
             }
         }
 
-        // ============ AUTO-PLAY MUSIC ============
+        // ============ MUSIC AUTO-PLAY ON FIRST CLICK ============
         const audio = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
-        const loadingOverlay = document.getElementById('loadingOverlay');
+        const startOverlay = document.getElementById('startOverlay');
         let isPlaying = false;
 
-        function hideLoading() {
-            loadingOverlay.classList.add('hidden');
-            setTimeout(() => loadingOverlay.remove(), 500);
+        function startEverything() {
+            // Load and play music
+            audio.src = MUSIC_URL;
+            audio.load();
+            
+            audio.play().then(() => {
+                isPlaying = true;
+                updateMusicButton();
+            }).catch(err => {
+                console.log('Music playback failed:', err);
+                isPlaying = false;
+                updateMusicButton();
+            });
+            
+            // Hide overlay
+            startOverlay.classList.add('hidden');
+            setTimeout(() => {
+                startOverlay.style.display = 'none';
+            }, 500);
         }
 
         function updateMusicButton() {
@@ -271,65 +314,6 @@
                 musicBtn.classList.remove('playing');
             }
         }
-
-        function playMusic() {
-            audio.src = MUSIC_URL;
-            audio.load();
-            
-            const playPromise = audio.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    isPlaying = true;
-                    updateMusicButton();
-                    hideLoading();
-                }).catch(() => {
-                    // Try iframe method
-                    tryIframeAutoplay();
-                });
-            }
-        }
-
-        function tryIframeAutoplay() {
-            const iframe = document.getElementById('musicFrame');
-            iframe.src = `data:text/html,<html><body><script>
-                window.onload = function() {
-                    var a = new Audio('${MUSIC_URL}');
-                    a.loop = true;
-                    a.play().then(function() {
-                        window.parent.postMessage('music-playing', '*');
-                    }).catch(function() {
-                        window.parent.postMessage('music-failed', '*');
-                    });
-                };
-            <\/script></body></html>`;
-            
-            // Fallback: show button to click
-            setTimeout(() => {
-                if (!isPlaying) {
-                    isPlaying = false;
-                    updateMusicButton();
-                    hideLoading();
-                }
-            }, 2000);
-        }
-
-        // Listen for iframe messages
-        window.addEventListener('message', function(e) {
-            if (e.data === 'music-playing') {
-                isPlaying = true;
-                updateMusicButton();
-                hideLoading();
-                // Sync with main audio
-                audio.src = MUSIC_URL;
-                audio.load();
-                audio.play().catch(() => {});
-            } else if (e.data === 'music-failed') {
-                isPlaying = false;
-                updateMusicButton();
-                hideLoading();
-            }
-        });
 
         function toggleMusic() {
             if (isPlaying) {
@@ -349,15 +333,15 @@
             updateMusicButton();
         }
 
-        // Start immediately
-        playMusic();
-
-        // Also try on first user interaction
-        document.addEventListener('click', function initOnClick() {
-            if (!isPlaying) {
-                playMusic();
+        // THE KEY: Click overlay starts music automatically
+        startOverlay.addEventListener('click', startEverything);
+        
+        // Also keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (startOverlay.style.display !== 'none') {
+                startEverything();
             }
-        }, { once: false });
+        });
 
         // ============ COUNTDOWN ============
         const TARGET = new Date(2026, 11, 12, 0, 0, 0);
@@ -395,6 +379,9 @@
         createStars();
         update();
         setInterval(update, 1000);
+        
+        // Initialize button state
+        updateMusicButton();
     </script>
 </body>
 </html>
