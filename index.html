@@ -26,7 +26,6 @@
             color: #ffffff;
         }
 
-        /* ستارەکان */
         .stars {
             position: fixed;
             top: 0;
@@ -50,7 +49,6 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* هەسارەکان */
         .planet {
             position: absolute;
             border-radius: 50%;
@@ -150,7 +148,6 @@
             transform: translate(-50%, -50%) rotate(-20deg);
         }
 
-        /* کۆنتێنەری سەرەکی */
         .main-container {
             position: relative;
             z-index: 10;
@@ -292,23 +289,51 @@
             color: #ff6600;
         }
 
+        .loading-indicator {
+            color: #ffaa00;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .volume-slider {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .volume-slider input {
+            width: 100px;
+            accent-color: #ffaa00;
+            cursor: pointer;
+        }
+
+        .volume-label {
+            color: #ffaa00;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 768px) {
             .title { font-size: 2.2rem; }
             .subtitle { font-size: 1.3rem; }
             .time-number { font-size: 2.2rem; }
             .time-block { min-width: 70px; padding: 15px 10px; }
             .countdown { gap: 10px; }
-            .planet { display: none; }
             .sun { width: 50px; height: 50px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ئەستێرەکان -->
     <div class="stars" id="stars"></div>
 
-    <!-- خۆر و هەسارەکان -->
     <div class="sun"></div>
     <div class="planet mercury" style="--orbit-radius: 90px; --orbit-duration: 2s; --rotate-duration: 10s; --delay: 0s;">
         <div class="planet-inner mercury"></div>
@@ -330,7 +355,6 @@
         <div class="planet-inner saturn"></div>
     </div>
 
-    <!-- کۆنتێنەری سەرەکی -->
     <div class="main-container">
         <div class="title">ڕەیان فەرزاد</div>
         <div class="subtitle">کاژمێری مەوا</div>
@@ -356,7 +380,7 @@
         </div>
 
         <div class="footer-image">
-            <img src="https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/IMG_8805.png?raw=true" 
+            <img src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_8805.png" 
                  alt="ڕەیان و فەرزاد" 
                  onerror="this.style.display='none'; this.parentElement.innerHTML='<p style=\'color:#ffaa00; padding:20px;\'>وێنەکە بەردەست نییە</p>';">
         </div>
@@ -366,16 +390,26 @@
             <span id="musicStatus">مۆسیقا ڕاگرتن</span>
             <span class="music-note">🎵</span>
         </button>
+        
+        <div class="loading-indicator" id="loadingIndicator" style="display: none;">⏳ بارکردنی مۆسیقای Interstellar...</div>
+
+        <div class="volume-slider">
+            <span class="volume-label">🔊</span>
+            <input type="range" id="volumeControl" min="0" max="100" value="40" onchange="changeVolume(this.value)">
+            <span class="volume-label" id="volumePercent">40%</span>
+        </div>
     </div>
 
-    <!-- یوتیوب ئایفرەیم بۆ مۆسیقا -->
-    <div id="youtube-player" style="position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px;"></div>
+    <!-- Audio Element بۆ مۆسیقای Interstellar -->
+    <audio id="bgMusic" preload="auto" style="display: none;"></audio>
 
     <script>
+        // ==========================================
         // دروستکردنی ئەستێرەکان
+        // ==========================================
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            const starCount = 200;
+            const starCount = 250;
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
@@ -391,65 +425,112 @@
         }
         createStars();
 
-        // یوتیوب API
-        let player;
+        // ==========================================
+        // سیستەمی مۆسیقای خۆکارانە - Interstellar
+        // ==========================================
+        const audioElement = document.getElementById('bgMusic');
         let isPlaying = false;
+        let musicStarted = false;
+        let isLoading = false;
 
-        // بارکردنی YouTube IFrame API
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // لینکی ڕاستەوخۆی مۆسیقای Interstellar لە GitHub
+        const MUSIC_URL = 'https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3';
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                videoId: '9AXyX555ZoU',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': '9AXyX555ZoU',
-                    'mute': 0,
-                    'playsinline': 1
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
+        // فەنکشنی دەستپێکردنی مۆسیقا
+        async function startMusic() {
+            if (isLoading || musicStarted) return;
+            isLoading = true;
+            
+            const loadingEl = document.getElementById('loadingIndicator');
+            if (loadingEl) loadingEl.style.display = 'block';
+
+            try {
+                // ڕێکخستنی audio element
+                audioElement.src = MUSIC_URL;
+                audioElement.loop = true;
+                audioElement.volume = 0.4;
+                
+                // هەوڵدان بۆ لێدانی مۆسیقا
+                await audioElement.play();
+                
+                isPlaying = true;
+                musicStarted = true;
+                updateMusicButton();
+                console.log('✅ مۆسیقای Interstellar بە سەرکەوتوویی دەستی پێکرد');
+            } catch (error) {
+                console.warn('⚠️ ئۆتۆپلەی ڕێگەپێنەدرا:', error.message);
+                console.log('🖱️ چاوەڕێی یەکەم کلیکی بەکارهێنەر...');
+                
+                // ئامادەکردنی مۆسیقا بۆ لێدان
+                audioElement.src = MUSIC_URL;
+                audioElement.loop = true;
+                audioElement.volume = 0.4;
+                audioElement.load();
+                
+                document.getElementById('musicStatus').textContent = 'کرتەیەک بکە 🎵';
+            } finally {
+                isLoading = false;
+                if (loadingEl) loadingEl.style.display = 'none';
+            }
         }
 
-        function onPlayerReady(event) {
-            event.target.playVideo();
-            event.target.setVolume(50);
-            isPlaying = true;
+        function stopMusic() {
+            audioElement.pause();
+            audioElement.currentTime = 0;
+            isPlaying = false;
+            musicStarted = false;
             updateMusicButton();
         }
 
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                isPlaying = true;
-                updateMusicButton();
-            } else if (event.data === YT.PlayerState.PAUSED) {
-                isPlaying = false;
+        function toggleMusic() {
+            if (isLoading) return;
+            
+            if (!musicStarted) {
+                // یەکەم جار - دەستپێکردنی مۆسیقا
+                audioElement.src = MUSIC_URL;
+                audioElement.loop = true;
+                audioElement.volume = document.getElementById('volumeControl').value / 100;
+                
+                audioElement.play().then(() => {
+                    isPlaying = true;
+                    musicStarted = true;
+                    updateMusicButton();
+                    console.log('✅ مۆسیقا دەستی پێکرد');
+                }).catch(error => {
+                    console.error('❌ شکست لە لێدانی مۆسیقا:', error);
+                    document.getElementById('musicStatus').textContent = 'دووبارە کرتە بکە';
+                });
+            } else {
+                // ڕاگرتن یان لێدان
+                if (isPlaying) {
+                    audioElement.pause();
+                    isPlaying = false;
+                } else {
+                    audioElement.play().then(() => {
+                        isPlaying = true;
+                    }).catch(error => {
+                        console.error('❌ شکست لە لێدان:', error);
+                    });
+                }
                 updateMusicButton();
             }
         }
 
-        function toggleMusic() {
-            if (player && typeof player.playVideo === 'function') {
-                if (isPlaying) {
-                    player.pauseVideo();
-                } else {
-                    player.playVideo();
-                }
-            }
+        function changeVolume(value) {
+            const volume = value / 100;
+            audioElement.volume = volume;
+            document.getElementById('volumePercent').textContent = value + '%';
         }
 
         function updateMusicButton() {
             const statusText = document.getElementById('musicStatus');
             const musicControl = document.getElementById('musicToggle');
-            if (isPlaying) {
+            
+            if (!musicStarted) {
+                statusText.textContent = 'کرتە بکە بۆ مۆسیقا';
+                musicControl.classList.remove('playing');
+                musicControl.classList.add('paused');
+            } else if (isPlaying) {
                 statusText.textContent = 'مۆسیقا ڕاگرتن';
                 musicControl.classList.add('playing');
                 musicControl.classList.remove('paused');
@@ -460,7 +541,9 @@
             }
         }
 
+        // ==========================================
         // کاژمێری مەوا - Countdown Timer
+        // ==========================================
         const targetDate = new Date('2026-12-12T00:00:00');
 
         function updateCountdown() {
@@ -487,16 +570,57 @@
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
 
-        // نوێکردنەوەی هەر چرکەیەک
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // بۆ کێشەی یوتیوب ئەگەر API بار نەبوو
-        window.onerror = function(msg) {
-            if (msg.includes('YT') || msg.includes('youtube')) {
-                console.log('یوتیوب API بار نەبوو، بەڵام کاژمێرەکە کار دەکات');
+        // ==========================================
+        // ئۆتۆپلەی خۆکارانە - هەوڵی زیرەکانە
+        // ==========================================
+        async function autoPlayMusic() {
+            try {
+                await startMusic();
+            } catch (e) {
+                console.log('چاوەڕێی کارلێکی بەکارهێنەر بۆ مۆسیقا...');
+                
+                const autoPlayOnInteraction = async () => {
+                    if (!musicStarted && !isLoading) {
+                        audioElement.src = MUSIC_URL;
+                        audioElement.loop = true;
+                        audioElement.volume = 0.4;
+                        
+                        try {
+                            await audioElement.play();
+                            isPlaying = true;
+                            musicStarted = true;
+                            updateMusicButton();
+                            console.log('✅ مۆسیقا بە کلیک دەستی پێکرد');
+                        } catch (err) {
+                            console.error('❌ هێشتا شکست:', err);
+                        }
+                        
+                        document.removeEventListener('click', autoPlayOnInteraction);
+                        document.removeEventListener('keydown', autoPlayOnInteraction);
+                        document.removeEventListener('touchstart', autoPlayOnInteraction);
+                    }
+                };
+                
+                document.addEventListener('click', autoPlayOnInteraction, { once: true });
+                document.addEventListener('keydown', autoPlayOnInteraction, { once: true });
+                document.addEventListener('touchstart', autoPlayOnInteraction, { once: true });
             }
-        };
+        }
+
+        // دەستپێکردنی ئۆتۆپلەی دوای 800ms
+        setTimeout(autoPlayMusic, 800);
+
+        // پاککردنەوە لە کاتی داخستن
+        window.addEventListener('beforeunload', () => {
+            stopMusic();
+        });
+
+        console.log('🌟 ڕەیان فەرزاد - کاژمێری مەوا ئامادەیە');
+        console.log('📅 تا 12/12/2026');
+        console.log('🎵 Interstellar - Hans Zimmer');
     </script>
 </body>
 </html>
