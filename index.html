@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ku" dir="rtl">
+<html lang="ckb" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ڕایان و فەرزاد - کاژێرە ماوە</title>
+    <title>ڕایان و فەرزاد - Countdown Timer</title>
     <style>
         * {
             margin: 0;
@@ -12,22 +12,26 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d0d3d 100%);
-            height: 100vh;
+            background: linear-gradient(135deg, #0a0a2e, #1a1a4e, #0a0a2e);
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
+            color: white;
+            overflow-x: hidden;
             position: relative;
         }
 
         .stars {
-            position: absolute;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: transparent;
-            z-index: 1;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .star {
@@ -38,358 +42,362 @@
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .planet {
-            position: absolute;
-            border-radius: 50%;
-            z-index: 2;
-            animation: float 6s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        }
-
-        .planet:nth-child(1) {
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c0392b);
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .planet:nth-child(2) {
-            width: 40px;
-            height: 40px;
-            background: radial-gradient(circle at 30% 30%, #4ecdc4, #1abc9c);
-            top: 20%;
-            right: 15%;
-            animation-delay: 1s;
-        }
-
-        .planet:nth-child(3) {
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle at 30% 30%, #f39c12, #e67e22);
-            bottom: 15%;
-            left: 20%;
-            animation-delay: 2s;
-        }
-
-        .planet:nth-child(4) {
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle at 30% 30%, #9b59b6, #8e44ad);
-            bottom: 25%;
-            right: 20%;
-            animation-delay: 3s;
-        }
-
-        .planet:nth-child(5) {
-            width: 35px;
-            height: 35px;
-            background: radial-gradient(circle at 30% 30%, #3498db, #2980b9);
-            top: 60%;
-            left: 50%;
-            animation-delay: 4s;
-        }
-
-        .earth {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle at 35% 35%, #4fc3f7, #1565c0, #0d47a1);
-            border-radius: 50%;
-            z-index: 3;
-            box-shadow: 0 0 30px rgba(79, 195, 247, 0.5);
-            animation: rotateEarth 20s linear infinite, float 6s ease-in-out infinite;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .earth::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), transparent 60%);
-            border-radius: 50%;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes rotateEarth {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 40px;
+            position: relative;
+            z-index: 1;
             text-align: center;
-            z-index: 10;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            max-width: 600px;
-            width: 90%;
+            padding: 20px;
         }
 
         .title {
-            font-size: 2.5em;
-            color: #fff;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-            animation: glow 2s ease-in-out infinite;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+            animation: glow 2s ease-in-out infinite alternate;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         @keyframes glow {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
-            50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.8); }
+            from {
+                text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(138, 43, 226, 1), 0 0 60px rgba(138, 43, 226, 0.5);
+            }
         }
 
-        .subtitle {
-            font-size: 1.2em;
-            color: #ffd700;
-            margin-bottom: 30px;
-        }
-
-        .countdown {
+        .countdown-container {
             display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
+            margin-bottom: 40px;
         }
 
-        .time-box {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            padding: 20px;
-            min-width: 80px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: pulse 1.5s ease-in-out infinite;
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            min-width: 150px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .time-box:nth-child(1) { animation-delay: 0s; }
-        .time-box:nth-child(2) { animation-delay: 0.3s; }
-        .time-box:nth-child(3) { animation-delay: 0.6s; }
-        .time-box:nth-child(4) { animation-delay: 0.9s; }
+        .countdown-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .countdown-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .countdown-label {
+            font-size: 1.2rem;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .countdown-seconds {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-top: 10px;
+            animation: pulse 1s infinite;
+        }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
         }
 
-        .time-number {
-            font-size: 3em;
-            font-weight: bold;
-            color: #ffd700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        .logo-container {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            max-width: 200px;
         }
 
-        .time-label {
-            color: #ccc;
-            font-size: 1em;
-            margin-top: 5px;
-        }
-
-        .seconds-total {
-            color: #fff;
-            font-size: 1.1em;
-            margin-top: 20px;
-            opacity: 0.8;
-        }
-
-        .brand {
-            margin-top: 30px;
-            color: #fff;
-            font-size: 1.2em;
-            opacity: 0.7;
-        }
-
-        .heart {
-            color: #ff6b6b;
-            animation: heartbeat 1.5s ease-in-out infinite;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .github-link {
-            display: inline-block;
-            margin-top: 20px;
-            opacity: 0.6;
-        }
-
-        .github-link img {
-            width: 60px;
+        .logo-container img {
+            width: 100%;
             height: auto;
             border-radius: 10px;
-            transition: transform 0.3s;
         }
 
-        .github-link img:hover {
-            transform: scale(1.1);
-            opacity: 0.8;
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .music-control:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .target-date {
+            font-size: 1.2rem;
+            margin-top: 30px;
+            color: #aaa;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .countdown-container {
+                gap: 15px;
+            }
+            
+            .countdown-item {
+                padding: 20px;
+                min-width: 120px;
+            }
+            
+            .countdown-number {
+                font-size: 2.5rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Star background -->
-    <div class="stars" id="stars"></div>
-    
-    <!-- Floating planets -->
-    <div class="planet"></div>
-    <div class="planet"></div>
-    <div class="planet"></div>
-    <div class="planet"></div>
-    <div class="planet"></div>
-    
-    <!-- Earth -->
-    <div class="earth"></div>
+    <button class="music-control" onclick="toggleMusic()" id="musicBtn">
+        🎵 پەخشکردن/راوەستاندنی موزیک
+    </button>
 
-    <!-- Main container -->
+    <div class="stars" id="stars"></div>
+
     <div class="container">
-        <h1 class="title">کاژێرە ماوە</h1>
-        <p class="subtitle">بۆ ١٢/١٢/٢٠٢٦</p>
+        <h1 class="title">ڕایان و فەرزاد</h1>
         
-        <div class="countdown">
-            <div class="time-box">
-                <div class="time-number" id="days">0</div>
-                <div class="time-label">ڕۆژ</div>
+        <div class="countdown-container">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">00</div>
+                <div class="countdown-label">ڕۆژ</div>
             </div>
-            <div class="time-box">
-                <div class="time-number" id="hours">0</div>
-                <div class="time-label">کاتژمێر</div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">00</div>
+                <div class="countdown-label">سەعات</div>
             </div>
-            <div class="time-box">
-                <div class="time-number" id="minutes">0</div>
-                <div class="time-label">خولەک</div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">00</div>
+                <div class="countdown-label">دەقە</div>
             </div>
-            <div class="time-box">
-                <div class="time-number" id="seconds">0</div>
-                <div class="time-label">چرکە</div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">00</div>
+                <div class="countdown-label">چرکە</div>
             </div>
         </div>
+
+        <div class="countdown-seconds" id="total-seconds">کۆی گشتی: 0 چرکە</div>
         
-        <div class="seconds-total" id="total-seconds">کۆی گشتی: 0 چرکە</div>
-        
-        <div class="brand">
-            <span class="heart">❤️</span> دروستکراوە لەلایەن ڕایان و فەرزاد <span class="heart">❤️</span>
-        </div>
-        
-        <div class="github-link">
-            <a href="https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/IMG_8805.png" target="_blank">
-                <img src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_8805.png" 
-                     alt="ڕایان و فەرزاد" 
-                     onerror="this.style.display='none'">
-            </a>
+        <div class="target-date">ماوە تاکو 12/12/2026</div>
+
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_8805.png" 
+                 alt="Logo" 
+                 onerror="this.style.display='none'">
         </div>
     </div>
 
-    <!-- YouTube Music (hidden iframe) -->
     <iframe id="youtube-player" 
-            style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0;"
-            src="https://www.youtube.com/embed/9AXyX555ZoU?autoplay=1&loop=1&playlist=9AXyX555ZoU&controls=0&mute=0"
-            frameborder="0" 
-            allow="autoplay">
+            style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0;" 
+            src="https://www.youtube.com/embed/9AXyX555ZoU?autoplay=1&loop=1&playlist=9AXyX555ZoU&controls=0"
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
     </iframe>
 
     <script>
         // Create stars
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            const numberOfStars = 200;
-            
-            for (let i = 0; i < numberOfStars; i++) {
+            for (let i = 0; i < 200; i++) {
                 const star = document.createElement('div');
-                star.className = 'star';
+                star.classList.add('star');
                 star.style.left = Math.random() * 100 + '%';
                 star.style.top = Math.random() * 100 + '%';
-                star.style.width = (Math.random() * 3 + 1) + 'px';
+                star.style.width = Math.random() * 3 + 'px';
                 star.style.height = star.style.width;
                 star.style.animationDelay = Math.random() * 2 + 's';
-                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
                 starsContainer.appendChild(star);
             }
         }
 
-        createStars();
+        // Create planets
+        function createPlanets() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .planet {
+                    position: fixed;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 0;
+                    opacity: 0.6;
+                }
+                
+                .earth {
+                    position: fixed;
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 0;
+                    background: radial-gradient(circle at 30% 30%, #4a90e2, #2e5a88 50%, #1a3a5c);
+                    box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+                    animation: orbit 20s linear infinite;
+                    bottom: 10%;
+                    right: 10%;
+                }
+                
+                @keyframes orbit {
+                    from { transform: rotate(0deg) translateX(50px); }
+                    to { transform: rotate(360deg) translateX(50px); }
+                }
+                
+                .planet1 { 
+                    width: 40px; height: 40px; 
+                    background: radial-gradient(circle at 30% 30%, #ff7b7b, #cc5555);
+                    top: 15%; left: 10%;
+                    animation: float1 8s ease-in-out infinite;
+                }
+                .planet2 { 
+                    width: 30px; height: 30px; 
+                    background: radial-gradient(circle at 30% 30%, #7b9eff, #4a5ecc);
+                    top: 20%; right: 15%;
+                    animation: float2 10s ease-in-out infinite;
+                }
+                .planet3 { 
+                    width: 50px; height: 50px; 
+                    background: radial-gradient(circle at 30% 30%, #ffd700, #cc9900);
+                    bottom: 20%; left: 20%;
+                    animation: float3 12s ease-in-out infinite;
+                }
+                .planet4 { 
+                    width: 35px; height: 35px; 
+                    background: radial-gradient(circle at 30% 30%, #98fb98, #5ecc5e);
+                    bottom: 30%; right: 30%;
+                    animation: float4 9s ease-in-out infinite;
+                }
+                
+                @keyframes float1 {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-30px); }
+                }
+                @keyframes float2 {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-20px); }
+                }
+                @keyframes float3 {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-25px); }
+                }
+                @keyframes float4 {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-15px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            const planets = document.createElement('div');
+            planets.innerHTML = `
+                <div class="planet planet1"></div>
+                <div class="planet planet2"></div>
+                <div class="planet planet3"></div>
+                <div class="planet planet4"></div>
+                <div class="earth"></div>
+            `;
+            document.body.appendChild(planets);
+        }
 
-        // Countdown function
+        // Countdown logic
         function updateCountdown() {
             const targetDate = new Date('2026-12-12T00:00:00');
             const now = new Date();
+            const difference = targetDate - now;
             
-            let difference = targetDate - now;
-            
-            // If date has passed
-            if (difference < 0) {
-                document.getElementById('days').textContent = '0';
-                document.getElementById('hours').textContent = '0';
-                document.getElementById('minutes').textContent = '0';
-                document.getElementById('seconds').textContent = '0';
-                document.getElementById('total-seconds').textContent = 'کۆی گشتی: 0 چرکە';
+            if (difference <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                document.getElementById('total-seconds').textContent = 'کاتی گەیشتنە! 🎉';
                 return;
             }
             
-            // Calculate time units
             const totalSeconds = Math.floor(difference / 1000);
-            const days = Math.floor(totalSeconds / (24 * 60 * 60));
-            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
-            const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-            const seconds = totalSeconds % 60;
+            const days = Math.floor(totalSeconds / (3600 * 24));
+            const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = Math.floor(totalSeconds % 60);
             
-            // Update display with Persian/Kurdish numbers
-            document.getElementById('days').textContent = toPersianNumber(days);
-            document.getElementById('hours').textContent = toPersianNumber(hours);
-            document.getElementById('minutes').textContent = toPersianNumber(minutes);
-            document.getElementById('seconds').textContent = toPersianNumber(seconds);
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            
             document.getElementById('total-seconds').textContent = 
-                `کۆی گشتی: ${toPersianNumber(totalSeconds)} چرکە`;
+                `کۆی گشتی: ${totalSeconds.toLocaleString()} چرکە`;
         }
 
-        // Convert to Persian numbers
-        function toPersianNumber(num) {
-            const persianDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-            return num.toString().split('').map(digit => persianDigits[digit] || digit).join('');
+        // Music control
+        let musicPlaying = true;
+        function toggleMusic() {
+            const player = document.getElementById('youtube-player');
+            if (musicPlaying) {
+                player.src = player.src.replace('autoplay=1', 'autoplay=0');
+                document.getElementById('musicBtn').textContent = '🎵 دەستپێکردنی موزیک';
+            } else {
+                player.src = player.src.replace('autoplay=0', 'autoplay=1');
+                document.getElementById('musicBtn').textContent = '🎵 پەخشکردن/راوەستاندنی موزیک';
+            }
+            musicPlaying = !musicPlaying;
         }
 
-        // Update every second
+        // Initialize
+        createStars();
+        createPlanets();
+        
         setInterval(updateCountdown, 1000);
-        updateCountdown(); // Initial call
-
-        // Audio context to handle autoplay
-        document.addEventListener('DOMContentLoaded', function() {
-            // Try to play audio on first user interaction
-            document.body.addEventListener('click', function() {
-                const iframe = document.getElementById('youtube-player');
-                if (iframe) {
-                    iframe.src = iframe.src; // Refresh iframe to trigger autoplay
-                }
-            }, { once: true });
-
-            // Alternative: Try to play immediately
-            setTimeout(() => {
-                const iframe = document.getElementById('youtube-player');
-                if (iframe) {
-                    iframe.src = iframe.src;
-                }
-            }, 1000);
-        });
-
-        // Log message
-        console.log('ڕایان و فەرزاد - کاژێرە ماوە بۆ ١٢/١٢/٢٠٢٦');
+        updateCountdown();
     </script>
 </body>
 </html>
