@@ -209,13 +209,13 @@
             padding: 50px 40px;
             text-align: center;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 80px rgba(100, 100, 255, 0.2);
-            max-width: 650px;
-            width: 90%;
+            max-width: 700px;
+            width: 95%;
         }
 
         .title {
             color: #ff6b9d;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
             margin-bottom: 10px;
             text-shadow: 0 0 30px rgba(255, 107, 157, 0.6);
@@ -254,67 +254,180 @@
 
         .countdown-title {
             color: #fff;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            opacity: 0.8;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        .time-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+        /* فلێپ کاونتەرەکان */
+        .flip-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
         }
 
-        .time-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 20px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.3s ease;
+        .flip-unit {
+            text-align: center;
         }
 
-        .time-item:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 107, 157, 0.5);
-            box-shadow: 0 0 30px rgba(255, 107, 157, 0.3);
-        }
-
-        .time-number {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-            line-height: 1;
-        }
-
-        .time-label {
+        .flip-label {
             color: #aaa;
             font-size: 0.9rem;
-            margin-top: 8px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .hours-minutes {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        .flip-clock {
+            display: flex;
+            gap: 4px;
         }
 
-        .hours-minutes .time-number {
-            font-size: 2.2rem;
+        .flip-digit {
+            position: relative;
+            width: 70px;
+            height: 100px;
+            perspective: 400px;
         }
 
-        .total-hours {
+        .flip-digit-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .flip-card {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(180deg, #1a1a3e 0%, #0d0d2b 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .flip-card-top {
+            top: 0;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .flip-card-bottom {
+            bottom: 0;
+            border-top: 2px solid rgba(0, 0, 0, 0.5);
+            border-radius: 0 0 8px 8px;
+        }
+
+        .flip-number {
+            position: absolute;
+            width: 100%;
+            height: 200%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8), 0 0 40px rgba(255, 107, 157, 0.4);
+            font-family: 'Courier New', monospace;
+        }
+
+        .flip-card-top .flip-number {
+            top: 0;
+            align-items: flex-end;
+            padding-bottom: 10px;
+        }
+
+        .flip-card-bottom .flip-number {
+            bottom: 0;
+            align-items: flex-start;
+            padding-top: 10px;
+        }
+
+        .flip-card-flipping {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            top: 0;
+            transform-origin: bottom;
+            animation: flipDown 0.6s ease-in-out;
+            z-index: 10;
+            background: linear-gradient(180deg, #1a1a3e 0%, #0d0d2b 100%);
+            border-radius: 8px 8px 0 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .flip-card-flipping .flip-number {
+            position: absolute;
+            width: 100%;
+            height: 200%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
+            font-family: 'Courier New', monospace;
+            top: 0;
+            padding-bottom: 10px;
+        }
+
+        @keyframes flipDown {
+            0% {
+                transform: rotateX(0deg);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: rotateX(-180deg);
+                opacity: 0;
+            }
+        }
+
+        /* جیاکەرەوە */
+        .separator {
+            font-size: 4rem;
+            color: #ff6b9d;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
+            animation: blink 1s step-end infinite;
+            margin: 0 5px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .total-hours-box {
             background: rgba(255, 107, 157, 0.15);
-            border-radius: 15px;
-            padding: 15px;
+            border-radius: 20px;
+            padding: 20px;
             margin-top: 15px;
             border: 1px solid rgba(255, 107, 157, 0.3);
         }
 
-        .total-hours .time-number {
-            font-size: 2.5rem;
+        .total-hours-label {
             color: #ff6b9d;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .total-hours-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff6b9d;
+            text-shadow: 0 0 30px rgba(255, 107, 157, 0.7);
+            font-family: 'Courier New', monospace;
         }
 
         .music-note {
@@ -332,7 +445,13 @@
             color: #4fc3f7;
             font-size: 0.9rem;
             margin-top: 15px;
-            opacity: 0.8;
+            opacity: 0.9;
+            animation: glowText 2s ease-in-out infinite;
+        }
+
+        @keyframes glowText {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
 
         .glow-text {
@@ -346,21 +465,61 @@
             50% { text-shadow: 0 0 40px rgba(255, 204, 0, 1), 0 0 60px rgba(255, 204, 0, 0.8); }
         }
 
+        .music-visualizer {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 3px;
+            height: 20px;
+            margin: 10px 0;
+        }
+
+        .music-bar {
+            width: 4px;
+            background: #ff6b9d;
+            border-radius: 2px;
+            animation: musicBounce 0.5s ease-in-out infinite alternate;
+        }
+
+        .music-bar:nth-child(1) { animation-delay: 0s; height: 10px; }
+        .music-bar:nth-child(2) { animation-delay: 0.1s; height: 15px; }
+        .music-bar:nth-child(3) { animation-delay: 0.2s; height: 20px; }
+        .music-bar:nth-child(4) { animation-delay: 0.3s; height: 12px; }
+        .music-bar:nth-child(5) { animation-delay: 0.4s; height: 18px; }
+        .music-bar:nth-child(6) { animation-delay: 0.5s; height: 8px; }
+        .music-bar:nth-child(7) { animation-delay: 0.6s; height: 14px; }
+        .music-bar:nth-child(8) { animation-delay: 0.7s; height: 16px; }
+
+        @keyframes musicBounce {
+            0% { transform: scaleY(0.5); opacity: 0.5; }
+            100% { transform: scaleY(1.5); opacity: 1; }
+        }
+
         @media (max-width: 600px) {
             .container {
-                padding: 30px 20px;
+                padding: 25px 15px;
             }
             .title {
                 font-size: 1.5rem;
             }
-            .time-number {
-                font-size: 2rem;
+            .flip-digit {
+                width: 50px;
+                height: 75px;
             }
-            .hours-minutes .time-number {
-                font-size: 1.5rem;
+            .flip-number {
+                font-size: 3rem;
             }
-            .time-grid {
+            .flip-card-flipping .flip-number {
+                font-size: 3rem;
+            }
+            .separator {
+                font-size: 3rem;
+            }
+            .flip-grid {
                 gap: 10px;
+            }
+            .total-hours-number {
+                font-size: 2rem;
             }
         }
     </style>
@@ -395,32 +554,102 @@
         <h1 class="title">ڕایان <span class="heart">❤️</span> لە فەرزاد</h1>
         <p class="subtitle">مارەکردنی ڕایان ❤️</p>
         
+        <!-- ڤیژواڵایزەری موزیک -->
+        <div class="music-visualizer">
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+        </div>
+        
         <div class="countdown-box">
             <p class="countdown-title">⏳ ماوەی مانەوە تا مانگی 11/2026 ⏳</p>
             
-            <div class="time-grid">
-                <div class="time-item">
-                    <div class="time-number" id="days">0</div>
-                    <div class="time-label">📅 ڕۆژ</div>
+            <!-- فلێپ کاونتەری سەرەکی -->
+            <div class="flip-grid">
+                <div class="flip-unit">
+                    <div class="flip-clock" id="daysFlipClock">
+                        <div class="flip-digit">
+                            <div class="flip-digit-inner">
+                                <div class="flip-card flip-card-top">
+                                    <span class="flip-number" id="daysTop">0</span>
+                                </div>
+                                <div class="flip-card flip-card-bottom">
+                                    <span class="flip-number" id="daysBottom">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-label">📅 ڕۆژ</div>
                 </div>
-                <div class="time-item">
-                    <div class="time-number" id="hours">0</div>
-                    <div class="time-label">⏰ سەعات</div>
+                
+                <span class="separator">:</span>
+                
+                <div class="flip-unit">
+                    <div class="flip-clock" id="hoursFlipClock">
+                        <div class="flip-digit">
+                            <div class="flip-digit-inner">
+                                <div class="flip-card flip-card-top">
+                                    <span class="flip-number" id="hoursTop">0</span>
+                                </div>
+                                <div class="flip-card flip-card-bottom">
+                                    <span class="flip-number" id="hoursBottom">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-label">⏰ سەعات</div>
                 </div>
-                <div class="time-item">
-                    <div class="time-number" id="minutes">0</div>
-                    <div class="time-label">🕐 دەقە</div>
+                
+                <span class="separator">:</span>
+                
+                <div class="flip-unit">
+                    <div class="flip-clock" id="minutesFlipClock">
+                        <div class="flip-digit">
+                            <div class="flip-digit-inner">
+                                <div class="flip-card flip-card-top">
+                                    <span class="flip-number" id="minutesTop">0</span>
+                                </div>
+                                <div class="flip-card flip-card-bottom">
+                                    <span class="flip-number" id="minutesBottom">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-label">🕐 دەقە</div>
+                </div>
+                
+                <span class="separator">:</span>
+                
+                <div class="flip-unit">
+                    <div class="flip-clock" id="secondsFlipClock">
+                        <div class="flip-digit">
+                            <div class="flip-digit-inner">
+                                <div class="flip-card flip-card-top">
+                                    <span class="flip-number" id="secondsTop">0</span>
+                                </div>
+                                <div class="flip-card flip-card-bottom">
+                                    <span class="flip-number" id="secondsBottom">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-label">⏱️ چرکە</div>
                 </div>
             </div>
             
-            <div class="total-hours">
-                <div class="time-number" id="totalHours">0</div>
-                <div class="time-label">⏱️ کۆی گشتی سەعاتەکان</div>
+            <div class="total-hours-box">
+                <div class="total-hours-label">⏱️ کۆی گشتی سەعاتەکان</div>
+                <div class="total-hours-number" id="totalHours">0</div>
             </div>
         </div>
         
         <p class="glow-text">✨ هەتا هەتایە ✨</p>
-        <p class="music-status" id="musicStatus">🎶 میوزیک: What You Won't Do for Love</p>
+        <p class="music-status" id="musicStatus">🎶 میوزیک: Bobby Caldwell - What You Won't Do for Love</p>
     </div>
 
     <!-- ئەپڕێدەری یوتیوب بۆ میوزیک (خۆکارانە کاردەکات) -->
@@ -430,7 +659,7 @@
         // ==================== دروستکردنی ئەستێرەکان ====================
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            const numberOfStars = 200;
+            const numberOfStars = 250;
             
             for (let i = 0; i < numberOfStars; i++) {
                 const star = document.createElement('div');
@@ -450,36 +679,110 @@
 
         createStars();
 
+        // ==================== ڤاریبڵەکانی پێشوو ====================
+        let previousDays = -1;
+        let previousHours = -1;
+        let previousMinutes = -1;
+        let previousSeconds = -1;
+
+        // ==================== فەنکشنی ئەنیمەیشنی فلێپ ====================
+        function flipDigit(elementId, newValue) {
+            const topEl = document.getElementById(elementId + 'Top');
+            const bottomEl = document.getElementById(elementId + 'Bottom');
+            const container = document.getElementById(elementId + 'FlipClock');
+            
+            if (!topEl || !bottomEl || !container) return;
+            
+            const oldTopValue = topEl.textContent;
+            const oldBottomValue = bottomEl.textContent;
+            
+            // ئەگەر بەهاکە نەگۆڕابێت، هیچ مەکە
+            if (oldBottomValue === String(newValue) && oldTopValue === String(newValue)) {
+                return;
+            }
+            
+            // ژوورەوە نوێ دەکەینەوە
+            topEl.textContent = newValue;
+            
+            // دروستکردنی ئەنیمەیشنی فلێپ
+            const flipEl = document.createElement('div');
+            flipEl.classList.add('flip-card-flipping');
+            
+            const flipNumber = document.createElement('span');
+            flipNumber.classList.add('flip-number');
+            flipNumber.textContent = oldBottomValue;
+            flipEl.appendChild(flipNumber);
+            
+            // ئەنیمەیشنەکە زیاددەکەین
+            const flipDigitInner = container.querySelector('.flip-digit-inner');
+            if (flipDigitInner) {
+                flipDigitInner.appendChild(flipEl);
+            }
+            
+            // دوای تەواوبوونی ئەنیمەیشن، خوارەوە نوێ دەکەینەوە و ئەنیمەیشنەکە دەسڕینەوە
+            setTimeout(() => {
+                bottomEl.textContent = newValue;
+                if (flipEl.parentNode) {
+                    flipEl.parentNode.removeChild(flipEl);
+                }
+            }, 550);
+        }
+
         // ==================== فەنکشنی کاونتداون ====================
         function updateCountdown() {
-            const targetDate = new Date(2026, 10, 1, 0, 0, 0); // 1ی مانگی 11ی 2026 (مانگ بە zero-based دەژمێردرێت، 10 = نۆڤەمبەر)
+            const targetDate = new Date(2026, 10, 1, 0, 0, 0); // 1ی مانگی 11ی 2026
             const now = new Date();
             
             // ئەگەر بەرواری ئێستا لە بەرواری مەبەست تێپەڕیبوو
             if (now >= targetDate) {
-                document.getElementById('days').textContent = '0';
-                document.getElementById('hours').textContent = '0';
-                document.getElementById('minutes').textContent = '0';
+                document.getElementById('daysTop').textContent = '0';
+                document.getElementById('daysBottom').textContent = '0';
+                document.getElementById('hoursTop').textContent = '0';
+                document.getElementById('hoursBottom').textContent = '0';
+                document.getElementById('minutesTop').textContent = '0';
+                document.getElementById('minutesBottom').textContent = '0';
+                document.getElementById('secondsTop').textContent = '0';
+                document.getElementById('secondsBottom').textContent = '0';
                 document.getElementById('totalHours').textContent = '0';
                 return;
             }
             
             const diffMs = targetDate - now;
             
-            // هەژمارکردنی ڕۆژ، سەعات، و دەقە
-            const diffMinutesTotal = Math.floor(diffMs / (1000 * 60));
-            const days = Math.floor(diffMinutesTotal / (60 * 24));
-            const remainingMinutesAfterDays = diffMinutesTotal % (60 * 24);
-            const hours = Math.floor(remainingMinutesAfterDays / 60);
-            const minutes = remainingMinutesAfterDays % 60;
+            // هەژمارکردنی ڕۆژ، سەعات، دەقە، و چرکە
+            const diffSecondsTotal = Math.floor(diffMs / 1000);
+            const days = Math.floor(diffSecondsTotal / (60 * 60 * 24));
+            const remainingSecondsAfterDays = diffSecondsTotal % (60 * 60 * 24);
+            const hours = Math.floor(remainingSecondsAfterDays / (60 * 60));
+            const remainingSecondsAfterHours = remainingSecondsAfterDays % (60 * 60);
+            const minutes = Math.floor(remainingSecondsAfterHours / 60);
+            const seconds = remainingSecondsAfterHours % 60;
             
-            // کۆی گشتی سەعاتەکان (ڕۆژەکان دەکەین بە سەعات و زیاددەکەین)
+            // کۆی گشتی سەعاتەکان
             const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
             
-            // نوێکردنەوەی DOM
-            document.getElementById('days').textContent = days.toLocaleString('en-US');
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
+            // فلێپ ئەنیمەیشن بۆ هەر یەکێک لە بەهاکان (ئەگەر گۆڕابێتن)
+            if (days !== previousDays) {
+                flipDigit('days', days);
+                previousDays = days;
+            }
+            
+            if (hours !== previousHours) {
+                flipDigit('hours', hours);
+                previousHours = hours;
+            }
+            
+            if (minutes !== previousMinutes) {
+                flipDigit('minutes', minutes);
+                previousMinutes = minutes;
+            }
+            
+            if (seconds !== previousSeconds) {
+                flipDigit('seconds', seconds);
+                previousSeconds = seconds;
+            }
+            
+            // نوێکردنەوەی کۆی گشتی سەعاتەکان
             document.getElementById('totalHours').textContent = totalHours.toLocaleString('en-US');
         }
 
@@ -487,20 +790,19 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // ==================== یوتیوب پلەیەری خۆکار ====================
-        // ئەم فەنکشنە API یوتیوب بار دەکات و پلەیەرەکە دروست دەکات
+        // ==================== یوتیوب پلەیەری خۆکار بە لینکی نوێ ====================
         let player;
         
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
                 height: '0',
                 width: '0',
-                videoId: '8fhTHBh_iqk',
+                videoId: '9AXyX555ZoU',  // لینکی نوێی موزیکەکە
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': '8fhTHBh_iqk',
+                    'playlist': '9AXyX555ZoU',
                     'mute': 0,
                     'start': 0
                 },
@@ -513,12 +815,12 @@
 
         function onPlayerReady(event) {
             event.target.playVideo();
-            document.getElementById('musicStatus').textContent = '🎶 میوزیک: What You Won\'t Do for Love - لە کاتی کارکردنە ♪';
+            document.getElementById('musicStatus').textContent = '🎶 میوزیک: Bobby Caldwell - What You Won\'t Do for Love - لە کاتی کارکردنە ♪';
         }
 
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.PLAYING) {
-                document.getElementById('musicStatus').textContent = '🎶 میوزیک: What You Won\'t Do for Love - لە کاتی کارکردنە ♪';
+                document.getElementById('musicStatus').textContent = '🎶 میوزیک: Bobby Caldwell - What You Won\'t Do for Love - لە کاتی کارکردنە ♪';
             } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
                 // ئەگەر میوزیکەکە وەستا یان تەواو بوو، دووبارە دەستپێبکاتەوە
                 player.playVideo();
@@ -537,6 +839,15 @@
                 player.playVideo();
             }
         }, { once: true });
+        
+        // هەوڵدان بۆ دەستپێکردنی میوزیک لە یەکەم بارکردندا
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (player && player.playVideo) {
+                    player.playVideo();
+                }
+            }, 1000);
+        });
     </script>
 </body>
 </html>
