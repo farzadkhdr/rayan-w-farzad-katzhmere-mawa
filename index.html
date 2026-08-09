@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ckb" dir="rtl">
+<html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ڕایان لە فەرزاد - ماوەی مانەوە تا 11/2026</title>
+    <title>ڕایان و فەرزاد - کاژێرە ماوە</title>
     <style>
         * {
             margin: 0;
@@ -12,842 +12,384 @@
         }
 
         body {
-            background: #0a0a2e;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d0d3d 100%);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             position: relative;
         }
 
-        /* ئەستێرە و گەلەئەستێرەیی */
         .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
+            position: absolute;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            background: transparent;
+            z-index: 1;
         }
 
         .star {
             position: absolute;
             background: white;
             border-radius: 50%;
-            animation: twinkle var(--duration) ease-in-out infinite;
-            animation-delay: var(--delay);
-            opacity: 0;
+            animation: twinkle 2s infinite;
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
 
-        /* خۆر */
-        .sun {
-            position: fixed;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, #ffdd00, #ff8800, #ff4400);
+        .planet {
+            position: absolute;
             border-radius: 50%;
-            top: 10%;
-            left: 5%;
-            z-index: 1;
-            box-shadow: 0 0 80px #ffaa00, 0 0 160px #ff6600, 0 0 240px #ff4400;
-            animation: pulse 3s ease-in-out infinite;
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 80px #ffaa00, 0 0 160px #ff6600, 0 0 240px #ff4400; }
-            50% { box-shadow: 0 0 120px #ffaa00, 0 0 200px #ff6600, 0 0 300px #ff4400; }
-        }
-
-        /* زەوی */
-        .earth {
-            position: fixed;
+        .planet:nth-child(1) {
             width: 60px;
             height: 60px;
-            background: radial-gradient(circle at 40% 35%, #4fc3f7, #1565c0 50%, #0d3b66 70%, #1a237e);
-            border-radius: 50%;
-            top: 30%;
-            left: 25%;
-            z-index: 1;
-            box-shadow: 0 0 40px #4fc3f7, 0 0 80px #1565c0;
-            animation: floatEarth 8s ease-in-out infinite;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c0392b);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
         }
 
-        .earth::before {
-            content: '';
-            position: absolute;
-            top: 15%;
+        .planet:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #4ecdc4, #1abc9c);
+            top: 20%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .planet:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #f39c12, #e67e22);
+            bottom: 15%;
             left: 20%;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, rgba(76, 175, 80, 0.7), transparent);
+            animation-delay: 2s;
+        }
+
+        .planet:nth-child(4) {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #9b59b6, #8e44ad);
+            bottom: 25%;
+            right: 20%;
+            animation-delay: 3s;
+        }
+
+        .planet:nth-child(5) {
+            width: 35px;
+            height: 35px;
+            background: radial-gradient(circle at 30% 30%, #3498db, #2980b9);
+            top: 60%;
+            left: 50%;
+            animation-delay: 4s;
+        }
+
+        .earth {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 35% 35%, #4fc3f7, #1565c0, #0d47a1);
             border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 0 30px rgba(79, 195, 247, 0.5);
+            animation: rotateEarth 20s linear infinite, float 6s ease-in-out infinite;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .earth::after {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 60%;
-            width: 12px;
-            height: 8px;
-            background: radial-gradient(ellipse, rgba(76, 175, 80, 0.5), transparent);
-            border-radius: 50%;
-            transform: rotate(-20deg);
-        }
-
-        @keyframes floatEarth {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            25% { transform: translateY(-20px) translateX(15px); }
-            50% { transform: translateY(10px) translateX(25px); }
-            75% { transform: translateY(-15px) translateX(10px); }
-        }
-
-        /* هەسارەی سوور (مەریخ) */
-        .mars {
-            position: fixed;
-            width: 45px;
-            height: 45px;
-            background: radial-gradient(circle at 40% 35%, #ef5350, #c62828 50%, #8b0000 80%);
-            border-radius: 50%;
-            top: 50%;
-            left: 70%;
-            z-index: 1;
-            box-shadow: 0 0 30px #ef5350, 0 0 60px #c62828;
-            animation: floatMars 10s ease-in-out infinite;
-        }
-
-        @keyframes floatMars {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            33% { transform: translateY(25px) translateX(-20px); }
-            66% { transform: translateY(-18px) translateX(-30px); }
-        }
-
-        /* هەسارەی شین (نێپتۆن) */
-        .neptune {
-            position: fixed;
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle at 40% 35%, #7e57c2, #3f51b5 50%, #1a237e 80%);
-            border-radius: 50%;
-            top: 65%;
-            left: 45%;
-            z-index: 1;
-            box-shadow: 0 0 35px #7e57c2, 0 0 70px #3f51b5;
-            animation: floatNeptune 12s ease-in-out infinite;
-        }
-
-        @keyframes floatNeptune {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            50% { transform: translateY(-30px) translateX(20px); }
-        }
-
-        /* هەسارەی زەرد (زوحەل) */
-        .saturn {
-            position: fixed;
-            width: 55px;
-            height: 55px;
-            background: radial-gradient(circle at 40% 35%, #ffe082, #ffb300 50%, #e65100 80%);
-            border-radius: 50%;
-            top: 20%;
-            left: 60%;
-            z-index: 1;
-            box-shadow: 0 0 35px #ffe082, 0 0 70px #ffb300;
-            animation: floatSaturn 14s ease-in-out infinite;
-        }
-
-        .saturn-ring {
-            position: absolute;
-            width: 80px;
-            height: 20px;
-            background: transparent;
-            border: 4px solid rgba(255, 183, 77, 0.7);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-20deg);
-            border-top: none;
-            border-bottom: none;
-        }
-
-        @keyframes floatSaturn {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-25px); }
-        }
-
-        /* کەشتی ئاسمانی */
-        .spaceship {
-            position: fixed;
-            z-index: 2;
-            animation: flySpaceship 15s linear infinite;
-            font-size: 40px;
-        }
-
-        @keyframes flySpaceship {
-            0% { top: 80%; left: -50px; transform: rotate(0deg); }
-            25% { top: 40%; left: 30%; transform: rotate(10deg); }
-            50% { top: 15%; left: 60%; transform: rotate(-5deg); }
-            75% { top: 50%; left: 85%; transform: rotate(15deg); }
-            100% { top: 80%; left: 110%; transform: rotate(0deg); }
-        }
-
-        /* کۆنتێنەری سەرەکی */
-        .container {
-            position: relative;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            border-radius: 30px;
-            padding: 50px 40px;
-            text-align: center;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 80px rgba(100, 100, 255, 0.2);
-            max-width: 700px;
-            width: 95%;
-        }
-
-        .title {
-            color: #ff6b9d;
-            font-size: 2.2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-shadow: 0 0 30px rgba(255, 107, 157, 0.6);
-            letter-spacing: 2px;
-        }
-
-        .subtitle {
-            color: #ffb3d9;
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-            opacity: 0.9;
-        }
-
-        .heart {
-            display: inline-block;
-            animation: heartbeat 1s ease-in-out infinite;
-            color: #ff3366;
-            font-size: 2rem;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.3); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.2); }
-            60% { transform: scale(1); }
-        }
-
-        .countdown-box {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 25px;
-            padding: 35px 25px;
-            margin: 25px 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .countdown-title {
-            color: #fff;
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            opacity: 0.9;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-
-        /* فلێپ کاونتەرەکان */
-        .flip-grid {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
-        .flip-unit {
-            text-align: center;
-        }
-
-        .flip-label {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .flip-clock {
-            display: flex;
-            gap: 4px;
-        }
-
-        .flip-digit {
-            position: relative;
-            width: 70px;
-            height: 100px;
-            perspective: 400px;
-        }
-
-        .flip-digit-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .flip-card {
-            position: absolute;
-            width: 100%;
-            height: 50%;
-            background: linear-gradient(180deg, #1a1a3e 0%, #0d0d2b 100%);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .flip-card-top {
             top: 0;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-            border-radius: 8px 8px 0 0;
-        }
-
-        .flip-card-bottom {
+            left: 0;
+            right: 0;
             bottom: 0;
-            border-top: 2px solid rgba(0, 0, 0, 0.5);
-            border-radius: 0 0 8px 8px;
-        }
-
-        .flip-number {
-            position: absolute;
-            width: 100%;
-            height: 200%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8), 0 0 40px rgba(255, 107, 157, 0.4);
-            font-family: 'Courier New', monospace;
-        }
-
-        .flip-card-top .flip-number {
-            top: 0;
-            align-items: flex-end;
-            padding-bottom: 10px;
-        }
-
-        .flip-card-bottom .flip-number {
-            bottom: 0;
-            align-items: flex-start;
-            padding-top: 10px;
-        }
-
-        .flip-card-flipping {
-            position: absolute;
-            width: 100%;
-            height: 50%;
-            top: 0;
-            transform-origin: bottom;
-            animation: flipDown 0.6s ease-in-out;
-            z-index: 10;
-            background: linear-gradient(180deg, #1a1a3e 0%, #0d0d2b 100%);
-            border-radius: 8px 8px 0 0;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-        }
-
-        .flip-card-flipping .flip-number {
-            position: absolute;
-            width: 100%;
-            height: 200%;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            font-size: 4rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
-            font-family: 'Courier New', monospace;
-            top: 0;
-            padding-bottom: 10px;
-        }
-
-        @keyframes flipDown {
-            0% {
-                transform: rotateX(0deg);
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: rotateX(-180deg);
-                opacity: 0;
-            }
-        }
-
-        /* جیاکەرەوە */
-        .separator {
-            font-size: 4rem;
-            color: #ff6b9d;
-            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
-            animation: blink 1s step-end infinite;
-            margin: 0 5px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .total-hours-box {
-            background: rgba(255, 107, 157, 0.15);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 15px;
-            border: 1px solid rgba(255, 107, 157, 0.3);
-        }
-
-        .total-hours-label {
-            color: #ff6b9d;
-            font-size: 1rem;
-            margin-bottom: 8px;
-        }
-
-        .total-hours-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #ff6b9d;
-            text-shadow: 0 0 30px rgba(255, 107, 157, 0.7);
-            font-family: 'Courier New', monospace;
-        }
-
-        .music-note {
-            display: inline-block;
-            animation: float 2s ease-in-out infinite;
-            font-size: 1.5rem;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), transparent 60%);
+            border-radius: 50%;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-20px); }
         }
 
-        .music-status {
-            color: #4fc3f7;
-            font-size: 0.9rem;
-            margin-top: 15px;
-            opacity: 0.9;
-            animation: glowText 2s ease-in-out infinite;
+        @keyframes rotateEarth {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        @keyframes glowText {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            z-index: 10;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 90%;
         }
 
-        .glow-text {
-            color: #ffcc00;
-            text-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+        .title {
+            font-size: 2.5em;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
             animation: glow 2s ease-in-out infinite;
         }
 
         @keyframes glow {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 204, 0, 0.6); }
-            50% { text-shadow: 0 0 40px rgba(255, 204, 0, 1), 0 0 60px rgba(255, 204, 0, 0.8); }
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.8); }
         }
 
-        .music-visualizer {
+        .subtitle {
+            font-size: 1.2em;
+            color: #ffd700;
+            margin-bottom: 30px;
+        }
+
+        .countdown {
             display: flex;
             justify-content: center;
-            align-items: flex-end;
-            gap: 3px;
-            height: 20px;
-            margin: 10px 0;
+            gap: 20px;
+            margin: 30px 0;
         }
 
-        .music-bar {
-            width: 4px;
-            background: #ff6b9d;
-            border-radius: 2px;
-            animation: musicBounce 0.5s ease-in-out infinite alternate;
+        .time-box {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: pulse 1.5s ease-in-out infinite;
         }
 
-        .music-bar:nth-child(1) { animation-delay: 0s; height: 10px; }
-        .music-bar:nth-child(2) { animation-delay: 0.1s; height: 15px; }
-        .music-bar:nth-child(3) { animation-delay: 0.2s; height: 20px; }
-        .music-bar:nth-child(4) { animation-delay: 0.3s; height: 12px; }
-        .music-bar:nth-child(5) { animation-delay: 0.4s; height: 18px; }
-        .music-bar:nth-child(6) { animation-delay: 0.5s; height: 8px; }
-        .music-bar:nth-child(7) { animation-delay: 0.6s; height: 14px; }
-        .music-bar:nth-child(8) { animation-delay: 0.7s; height: 16px; }
+        .time-box:nth-child(1) { animation-delay: 0s; }
+        .time-box:nth-child(2) { animation-delay: 0.3s; }
+        .time-box:nth-child(3) { animation-delay: 0.6s; }
+        .time-box:nth-child(4) { animation-delay: 0.9s; }
 
-        @keyframes musicBounce {
-            0% { transform: scaleY(0.5); opacity: 0.5; }
-            100% { transform: scaleY(1.5); opacity: 1; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 25px 15px;
-            }
-            .title {
-                font-size: 1.5rem;
-            }
-            .flip-digit {
-                width: 50px;
-                height: 75px;
-            }
-            .flip-number {
-                font-size: 3rem;
-            }
-            .flip-card-flipping .flip-number {
-                font-size: 3rem;
-            }
-            .separator {
-                font-size: 3rem;
-            }
-            .flip-grid {
-                gap: 10px;
-            }
-            .total-hours-number {
-                font-size: 2rem;
-            }
+        .time-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .time-label {
+            color: #ccc;
+            font-size: 1em;
+            margin-top: 5px;
+        }
+
+        .seconds-total {
+            color: #fff;
+            font-size: 1.1em;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        .brand {
+            margin-top: 30px;
+            color: #fff;
+            font-size: 1.2em;
+            opacity: 0.7;
+        }
+
+        .heart {
+            color: #ff6b6b;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .github-link {
+            display: inline-block;
+            margin-top: 20px;
+            opacity: 0.6;
+        }
+
+        .github-link img {
+            width: 60px;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .github-link img:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-    <!-- ئەستێرەکان -->
+    <!-- Star background -->
     <div class="stars" id="stars"></div>
-
-    <!-- خۆر -->
-    <div class="sun"></div>
-
-    <!-- زەوی -->
+    
+    <!-- Floating planets -->
+    <div class="planet"></div>
+    <div class="planet"></div>
+    <div class="planet"></div>
+    <div class="planet"></div>
+    <div class="planet"></div>
+    
+    <!-- Earth -->
     <div class="earth"></div>
 
-    <!-- مەریخ -->
-    <div class="mars"></div>
-
-    <!-- نێپتۆن -->
-    <div class="neptune"></div>
-
-    <!-- زوحەل -->
-    <div class="saturn">
-        <div class="saturn-ring"></div>
-    </div>
-
-    <!-- کەشتی ئاسمانی -->
-    <div class="spaceship">🚀</div>
-
-    <!-- کۆنتێنەری سەرەکی -->
+    <!-- Main container -->
     <div class="container">
-        <div class="music-note">🎵</div>
-        <h1 class="title">ڕایان <span class="heart">❤️</span> لە فەرزاد</h1>
-        <p class="subtitle">مارەکردنی ڕایان ❤️</p>
+        <h1 class="title">کاژێرە ماوە</h1>
+        <p class="subtitle">بۆ ١٢/١٢/٢٠٢٦</p>
         
-        <!-- ڤیژواڵایزەری موزیک -->
-        <div class="music-visualizer">
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-        </div>
-        
-        <div class="countdown-box">
-            <p class="countdown-title">⏳ ماوەی مانەوە تا مانگی 11/2026 ⏳</p>
-            
-            <!-- فلێپ کاونتەری سەرەکی -->
-            <div class="flip-grid">
-                <div class="flip-unit">
-                    <div class="flip-clock" id="daysFlipClock">
-                        <div class="flip-digit">
-                            <div class="flip-digit-inner">
-                                <div class="flip-card flip-card-top">
-                                    <span class="flip-number" id="daysTop">0</span>
-                                </div>
-                                <div class="flip-card flip-card-bottom">
-                                    <span class="flip-number" id="daysBottom">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-label">📅 ڕۆژ</div>
-                </div>
-                
-                <span class="separator">:</span>
-                
-                <div class="flip-unit">
-                    <div class="flip-clock" id="hoursFlipClock">
-                        <div class="flip-digit">
-                            <div class="flip-digit-inner">
-                                <div class="flip-card flip-card-top">
-                                    <span class="flip-number" id="hoursTop">0</span>
-                                </div>
-                                <div class="flip-card flip-card-bottom">
-                                    <span class="flip-number" id="hoursBottom">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-label">⏰ سەعات</div>
-                </div>
-                
-                <span class="separator">:</span>
-                
-                <div class="flip-unit">
-                    <div class="flip-clock" id="minutesFlipClock">
-                        <div class="flip-digit">
-                            <div class="flip-digit-inner">
-                                <div class="flip-card flip-card-top">
-                                    <span class="flip-number" id="minutesTop">0</span>
-                                </div>
-                                <div class="flip-card flip-card-bottom">
-                                    <span class="flip-number" id="minutesBottom">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-label">🕐 دەقە</div>
-                </div>
-                
-                <span class="separator">:</span>
-                
-                <div class="flip-unit">
-                    <div class="flip-clock" id="secondsFlipClock">
-                        <div class="flip-digit">
-                            <div class="flip-digit-inner">
-                                <div class="flip-card flip-card-top">
-                                    <span class="flip-number" id="secondsTop">0</span>
-                                </div>
-                                <div class="flip-card flip-card-bottom">
-                                    <span class="flip-number" id="secondsBottom">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-label">⏱️ چرکە</div>
-                </div>
+        <div class="countdown">
+            <div class="time-box">
+                <div class="time-number" id="days">0</div>
+                <div class="time-label">ڕۆژ</div>
             </div>
-            
-            <div class="total-hours-box">
-                <div class="total-hours-label">⏱️ کۆی گشتی سەعاتەکان</div>
-                <div class="total-hours-number" id="totalHours">0</div>
+            <div class="time-box">
+                <div class="time-number" id="hours">0</div>
+                <div class="time-label">کاتژمێر</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="minutes">0</div>
+                <div class="time-label">خولەک</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="seconds">0</div>
+                <div class="time-label">چرکە</div>
             </div>
         </div>
         
-        <p class="glow-text">✨ هەتا هەتایە ✨</p>
-        <p class="music-status" id="musicStatus">🎶 میوزیک: Bobby Caldwell - What You Won't Do for Love</p>
+        <div class="seconds-total" id="total-seconds">کۆی گشتی: 0 چرکە</div>
+        
+        <div class="brand">
+            <span class="heart">❤️</span> دروستکراوە لەلایەن ڕایان و فەرزاد <span class="heart">❤️</span>
+        </div>
+        
+        <div class="github-link">
+            <a href="https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/IMG_8805.png" target="_blank">
+                <img src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_8805.png" 
+                     alt="ڕایان و فەرزاد" 
+                     onerror="this.style.display='none'">
+            </a>
+        </div>
     </div>
 
-    <!-- ئەپڕێدەری یوتیوب بۆ میوزیک (خۆکارانە کاردەکات) -->
-    <div id="youtube-player" style="position: fixed; bottom: -100px; left: -100px; opacity: 0; pointer-events: none;"></div>
+    <!-- YouTube Music (hidden iframe) -->
+    <iframe id="youtube-player" 
+            style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0;"
+            src="https://www.youtube.com/embed/9AXyX555ZoU?autoplay=1&loop=1&playlist=9AXyX555ZoU&controls=0&mute=0"
+            frameborder="0" 
+            allow="autoplay">
+    </iframe>
 
     <script>
-        // ==================== دروستکردنی ئەستێرەکان ====================
+        // Create stars
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            const numberOfStars = 250;
+            const numberOfStars = 200;
             
             for (let i = 0; i < numberOfStars; i++) {
                 const star = document.createElement('div');
-                star.classList.add('star');
-                
-                const size = Math.random() * 3 + 1;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
+                star.className = 'star';
                 star.style.left = Math.random() * 100 + '%';
                 star.style.top = Math.random() * 100 + '%';
-                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-                star.style.setProperty('--delay', (Math.random() * 5) + 's');
-                
+                star.style.width = (Math.random() * 3 + 1) + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
                 starsContainer.appendChild(star);
             }
         }
 
         createStars();
 
-        // ==================== ڤاریبڵەکانی پێشوو ====================
-        let previousDays = -1;
-        let previousHours = -1;
-        let previousMinutes = -1;
-        let previousSeconds = -1;
-
-        // ==================== فەنکشنی ئەنیمەیشنی فلێپ ====================
-        function flipDigit(elementId, newValue) {
-            const topEl = document.getElementById(elementId + 'Top');
-            const bottomEl = document.getElementById(elementId + 'Bottom');
-            const container = document.getElementById(elementId + 'FlipClock');
-            
-            if (!topEl || !bottomEl || !container) return;
-            
-            const oldTopValue = topEl.textContent;
-            const oldBottomValue = bottomEl.textContent;
-            
-            // ئەگەر بەهاکە نەگۆڕابێت، هیچ مەکە
-            if (oldBottomValue === String(newValue) && oldTopValue === String(newValue)) {
-                return;
-            }
-            
-            // ژوورەوە نوێ دەکەینەوە
-            topEl.textContent = newValue;
-            
-            // دروستکردنی ئەنیمەیشنی فلێپ
-            const flipEl = document.createElement('div');
-            flipEl.classList.add('flip-card-flipping');
-            
-            const flipNumber = document.createElement('span');
-            flipNumber.classList.add('flip-number');
-            flipNumber.textContent = oldBottomValue;
-            flipEl.appendChild(flipNumber);
-            
-            // ئەنیمەیشنەکە زیاددەکەین
-            const flipDigitInner = container.querySelector('.flip-digit-inner');
-            if (flipDigitInner) {
-                flipDigitInner.appendChild(flipEl);
-            }
-            
-            // دوای تەواوبوونی ئەنیمەیشن، خوارەوە نوێ دەکەینەوە و ئەنیمەیشنەکە دەسڕینەوە
-            setTimeout(() => {
-                bottomEl.textContent = newValue;
-                if (flipEl.parentNode) {
-                    flipEl.parentNode.removeChild(flipEl);
-                }
-            }, 550);
-        }
-
-        // ==================== فەنکشنی کاونتداون ====================
+        // Countdown function
         function updateCountdown() {
-            const targetDate = new Date(2026, 10, 1, 0, 0, 0); // 1ی مانگی 11ی 2026
+            const targetDate = new Date('2026-12-12T00:00:00');
             const now = new Date();
             
-            // ئەگەر بەرواری ئێستا لە بەرواری مەبەست تێپەڕیبوو
-            if (now >= targetDate) {
-                document.getElementById('daysTop').textContent = '0';
-                document.getElementById('daysBottom').textContent = '0';
-                document.getElementById('hoursTop').textContent = '0';
-                document.getElementById('hoursBottom').textContent = '0';
-                document.getElementById('minutesTop').textContent = '0';
-                document.getElementById('minutesBottom').textContent = '0';
-                document.getElementById('secondsTop').textContent = '0';
-                document.getElementById('secondsBottom').textContent = '0';
-                document.getElementById('totalHours').textContent = '0';
+            let difference = targetDate - now;
+            
+            // If date has passed
+            if (difference < 0) {
+                document.getElementById('days').textContent = '0';
+                document.getElementById('hours').textContent = '0';
+                document.getElementById('minutes').textContent = '0';
+                document.getElementById('seconds').textContent = '0';
+                document.getElementById('total-seconds').textContent = 'کۆی گشتی: 0 چرکە';
                 return;
             }
             
-            const diffMs = targetDate - now;
+            // Calculate time units
+            const totalSeconds = Math.floor(difference / 1000);
+            const days = Math.floor(totalSeconds / (24 * 60 * 60));
+            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+            const seconds = totalSeconds % 60;
             
-            // هەژمارکردنی ڕۆژ، سەعات، دەقە، و چرکە
-            const diffSecondsTotal = Math.floor(diffMs / 1000);
-            const days = Math.floor(diffSecondsTotal / (60 * 60 * 24));
-            const remainingSecondsAfterDays = diffSecondsTotal % (60 * 60 * 24);
-            const hours = Math.floor(remainingSecondsAfterDays / (60 * 60));
-            const remainingSecondsAfterHours = remainingSecondsAfterDays % (60 * 60);
-            const minutes = Math.floor(remainingSecondsAfterHours / 60);
-            const seconds = remainingSecondsAfterHours % 60;
-            
-            // کۆی گشتی سەعاتەکان
-            const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
-            
-            // فلێپ ئەنیمەیشن بۆ هەر یەکێک لە بەهاکان (ئەگەر گۆڕابێتن)
-            if (days !== previousDays) {
-                flipDigit('days', days);
-                previousDays = days;
-            }
-            
-            if (hours !== previousHours) {
-                flipDigit('hours', hours);
-                previousHours = hours;
-            }
-            
-            if (minutes !== previousMinutes) {
-                flipDigit('minutes', minutes);
-                previousMinutes = minutes;
-            }
-            
-            if (seconds !== previousSeconds) {
-                flipDigit('seconds', seconds);
-                previousSeconds = seconds;
-            }
-            
-            // نوێکردنەوەی کۆی گشتی سەعاتەکان
-            document.getElementById('totalHours').textContent = totalHours.toLocaleString('en-US');
+            // Update display with Persian/Kurdish numbers
+            document.getElementById('days').textContent = toPersianNumber(days);
+            document.getElementById('hours').textContent = toPersianNumber(hours);
+            document.getElementById('minutes').textContent = toPersianNumber(minutes);
+            document.getElementById('seconds').textContent = toPersianNumber(seconds);
+            document.getElementById('total-seconds').textContent = 
+                `کۆی گشتی: ${toPersianNumber(totalSeconds)} چرکە`;
         }
 
-        // یەکەمجار ڕەن دەکەین و دواتر هەموو 1 چرکەیەک نوێیدەکەینەوە
-        updateCountdown();
+        // Convert to Persian numbers
+        function toPersianNumber(num) {
+            const persianDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return num.toString().split('').map(digit => persianDigits[digit] || digit).join('');
+        }
+
+        // Update every second
         setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
 
-        // ==================== یوتیوب پلەیەری خۆکار بە لینکی نوێ ====================
-        let player;
-        
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
-                videoId: '9AXyX555ZoU',  // لینکی نوێی موزیکەکە
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': '9AXyX555ZoU',
-                    'mute': 0,
-                    'start': 0
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
+        // Audio context to handle autoplay
+        document.addEventListener('DOMContentLoaded', function() {
+            // Try to play audio on first user interaction
+            document.body.addEventListener('click', function() {
+                const iframe = document.getElementById('youtube-player');
+                if (iframe) {
+                    iframe.src = iframe.src; // Refresh iframe to trigger autoplay
                 }
-            });
-        }
+            }, { once: true });
 
-        function onPlayerReady(event) {
-            event.target.playVideo();
-            document.getElementById('musicStatus').textContent = '🎶 میوزیک: Bobby Caldwell - What You Won\'t Do for Love - لە کاتی کارکردنە ♪';
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                document.getElementById('musicStatus').textContent = '🎶 میوزیک: Bobby Caldwell - What You Won\'t Do for Love - لە کاتی کارکردنە ♪';
-            } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
-                // ئەگەر میوزیکەکە وەستا یان تەواو بوو، دووبارە دەستپێبکاتەوە
-                player.playVideo();
-            }
-        }
-
-        // بارکردنی YouTube IFrame API
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // بۆ ئەوەی دڵنیا بین میوزیکەکە کاردەکات، ئەگەر بەکارهێنەر کلیک لە شوێنێک کرد
-        document.addEventListener('click', function() {
-            if (player && player.playVideo) {
-                player.playVideo();
-            }
-        }, { once: true });
-        
-        // هەوڵدان بۆ دەستپێکردنی میوزیک لە یەکەم بارکردندا
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                if (player && player.playVideo) {
-                    player.playVideo();
+            // Alternative: Try to play immediately
+            setTimeout(() => {
+                const iframe = document.getElementById('youtube-player');
+                if (iframe) {
+                    iframe.src = iframe.src;
                 }
             }, 1000);
         });
+
+        // Log message
+        console.log('ڕایان و فەرزاد - کاژێرە ماوە بۆ ١٢/١٢/٢٠٢٦');
     </script>
 </body>
 </html>
