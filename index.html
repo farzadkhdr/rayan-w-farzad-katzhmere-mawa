@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0a0a2e 100%);
+            background: radial-gradient(ellipse at center, #1a1a3e 0%, #0a0a1e 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,14 +24,13 @@
             position: relative;
         }
 
-        /* Stars animation */
+        /* Stars */
         .stars {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: 0;
         }
 
@@ -43,338 +42,269 @@
         }
 
         @keyframes twinkle {
-            0% { opacity: 0.3; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.5); }
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Main container */
-        .main-container {
+        /* Main card */
+        .main-card {
             position: relative;
             z-index: 1;
-            text-align: center;
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
             backdrop-filter: blur(10px);
-            max-width: 800px;
+            padding: 25px 30px;
+            text-align: center;
+            max-width: 500px;
             width: 90%;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
         }
 
-        /* Title */
         .title {
-            font-size: 48px;
+            font-size: 28px;
             font-weight: 700;
             color: #FFD700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-            100% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            margin-bottom: 5px;
         }
 
         .subtitle {
-            font-size: 20px;
-            color: #cccccc;
-            margin-bottom: 40px;
+            font-size: 13px;
+            color: #aaaaaa;
+            margin-bottom: 25px;
         }
 
-        /* Countdown */
-        .countdown-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
+        /* Countdown grid */
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 25px;
         }
 
-        .countdown-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            min-width: 120px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s;
-        }
-
-        .countdown-item:hover {
-            transform: scale(1.05);
-            border-color: #FFD700;
-        }
-
-        .countdown-number {
-            font-size: 56px;
-            font-weight: 700;
-            color: #FFD700;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        }
-
-        .days .countdown-number {
-            color: #4CAF50;
-            text-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
-        }
-
-        .hours .countdown-number {
-            color: #2196F3;
-            text-shadow: 0 0 15px rgba(33, 150, 243, 0.5);
-        }
-
-        .minutes .countdown-number {
-            color: #FF9800;
-            text-shadow: 0 0 15px rgba(255, 152, 0, 0.5);
-        }
-
-        .seconds .countdown-number {
-            color: #F44336;
-            text-shadow: 0 0 15px rgba(244, 67, 54, 0.5);
-        }
-
-        .countdown-label {
-            font-size: 16px;
-            color: #cccccc;
-            margin-top: 5px;
-        }
-
-        /* November countdown */
-        .november-countdown {
-            font-size: 22px;
-            color: #FF69B4;
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(255, 105, 180, 0.1);
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 10px;
-            border: 1px solid rgba(255, 105, 180, 0.3);
+            padding: 12px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .countdown-box .number {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .countdown-box .label {
+            font-size: 11px;
+            color: #aaaaaa;
+            margin-top: 4px;
+        }
+
+        .box-days .number { color: #4CAF50; }
+        .box-hours .number { color: #2196F3; }
+        .box-minutes .number { color: #FF9800; }
+        .box-seconds .number { color: #F44336; }
+
+        /* November */
+        .november-box {
+            font-size: 14px;
+            color: #FF69B4;
+            background: rgba(255, 105, 180, 0.08);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 105, 180, 0.2);
         }
 
         /* Planet image */
-        .planet-container {
-            margin-top: 30px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .planet-image {
-            max-width: 200px;
+        .planet-img {
+            width: 120px;
             height: auto;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(100, 100, 255, 0.3);
+            border-radius: 10px;
+            opacity: 0.85;
+            box-shadow: 0 0 20px rgba(100, 100, 255, 0.2);
         }
 
-        /* Music controls */
-        .music-control {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-        }
-
+        /* Music button */
         .music-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 13px;
+            z-index: 100;
             backdrop-filter: blur(5px);
-            transition: all 0.3s;
+            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
         }
 
         .music-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: #FFD700;
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Loading */
-        .loading {
-            color: #FFD700;
-            font-size: 14px;
-            margin-top: 10px;
+        .music-btn.playing {
+            border-color: #4CAF50;
+            color: #4CAF50;
         }
     </style>
 </head>
 <body>
-    <!-- Stars background -->
+    <!-- Stars -->
     <div class="stars" id="stars"></div>
 
-    <!-- Music control -->
-    <div class="music-control">
-        <button class="music-btn" onclick="toggleMusic()" id="musicBtn">
-            🎵 موزیک
-        </button>
-        <audio id="bgMusic" loop>
-            <source src="https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3?raw=true" type="audio/mpeg">
-        </audio>
-    </div>
+    <!-- Music -->
+    <audio id="bgMusic" loop preload="auto"></audio>
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵 دەستپێکردنی موزیک</button>
 
-    <!-- Main container -->
-    <div class="main-container">
-        <!-- Title -->
+    <!-- Main card -->
+    <div class="main-card">
         <h1 class="title">ڕەیان و فەرزاد</h1>
         <p class="subtitle">کاژێری ماوە بۆ 12/12/2026</p>
 
-        <!-- Countdown -->
-        <div class="countdown-container">
-            <div class="countdown-item days">
-                <div class="countdown-number" id="days">0</div>
-                <div class="countdown-label">ڕۆژ</div>
+        <div class="countdown-grid">
+            <div class="countdown-box box-days">
+                <div class="number" id="days">0</div>
+                <div class="label">ڕۆژ</div>
             </div>
-            <div class="countdown-item hours">
-                <div class="countdown-number" id="hours">0</div>
-                <div class="countdown-label">کاتژمێر</div>
+            <div class="countdown-box box-hours">
+                <div class="number" id="hours">0</div>
+                <div class="label">کاتژمێر</div>
             </div>
-            <div class="countdown-item minutes">
-                <div class="countdown-number" id="minutes">0</div>
-                <div class="countdown-label">خولەک</div>
+            <div class="countdown-box box-minutes">
+                <div class="number" id="minutes">0</div>
+                <div class="label">خولەک</div>
             </div>
-            <div class="countdown-item seconds">
-                <div class="countdown-number" id="seconds">0</div>
-                <div class="countdown-label">چرکە</div>
+            <div class="countdown-box box-seconds">
+                <div class="number" id="seconds">0</div>
+                <div class="label">چرکە</div>
             </div>
         </div>
 
-        <!-- November countdown -->
-        <div class="november-countdown" id="novemberCountdown">
-            ⏰ ماوە بۆ مانگی 11: ... ڕۆژ
-        </div>
+        <div class="november-box" id="novBox">⏰ ماوە بۆ مانگی 11: ... ڕۆژ</div>
 
-        <!-- Planet image -->
-        <div class="planet-container">
-            <img 
-                src="https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/IMG_8805.png?raw=true" 
-                alt="هەسارە و زەوی" 
-                class="planet-image"
-                onerror="this.style.display='none'"
-            >
-        </div>
+        <img 
+            src="https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/IMG_8805.png?raw=true" 
+            alt="هەسارە"
+            class="planet-img"
+            onerror="this.style.display='none'"
+        >
     </div>
 
     <script>
-        // Create stars
+        // ============ STARS ============
         function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const numberOfStars = 200;
-            
-            for (let i = 0; i < numberOfStars; i++) {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = Math.random() * 3 + 1 + 'px';
-                star.style.height = star.style.width;
-                star.style.animationDelay = Math.random() * 2 + 's';
-                star.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                starsContainer.appendChild(star);
+                const size = Math.random() * 2 + 1;
+                star.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    width: ${size}px;
+                    height: ${size}px;
+                    animation-delay: ${Math.random() * 2}s;
+                `;
+                container.appendChild(star);
             }
         }
 
-        // Target date: December 12, 2026
-        const targetDate = new Date(2026, 11, 12, 0, 0, 0); // Month is 0-indexed (11 = December)
+        // ============ MUSIC ============
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const MUSIC_URL = 'https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3?raw=true';
 
-        // Get next November
+        let musicLoaded = false;
+
+        function loadMusic() {
+            if (!musicLoaded) {
+                audio.src = MUSIC_URL;
+                audio.load();
+                musicLoaded = true;
+            }
+        }
+
+        function toggleMusic() {
+            loadMusic();
+            if (audio.paused) {
+                audio.play().then(() => {
+                    musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
+                    musicBtn.classList.add('playing');
+                }).catch(() => {
+                    musicBtn.textContent = '🎵 کرتە بکە بۆ موزیک';
+                });
+            } else {
+                audio.pause();
+                musicBtn.textContent = '🎵 دەستپێکردنی موزیک';
+                musicBtn.classList.remove('playing');
+            }
+        }
+
+        // Auto-play on first click anywhere
+        document.addEventListener('click', function autoPlay() {
+            loadMusic();
+            if (audio.paused) {
+                audio.play().then(() => {
+                    musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
+                    musicBtn.classList.add('playing');
+                }).catch(() => {});
+            }
+        }, { once: false });
+
+        // Also try on load
+        window.addEventListener('load', () => {
+            loadMusic();
+            audio.play().then(() => {
+                musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
+                musicBtn.classList.add('playing');
+            }).catch(() => {
+                musicBtn.textContent = '🎵 کرتە بکە بۆ موزیک';
+            });
+        });
+
+        // ============ COUNTDOWN ============
+        const TARGET = new Date(2026, 11, 12, 0, 0, 0); // 12 Dec 2026
+
         function getNextNovember() {
             const now = new Date();
-            let november = new Date(now.getFullYear(), 10, 1); // 10 = November
-            
-            if (now > november) {
-                november = new Date(now.getFullYear() + 1, 10, 1);
-            }
-            
-            return november;
+            let nov = new Date(now.getFullYear(), 10, 1);
+            if (now > nov) nov = new Date(now.getFullYear() + 1, 10, 1);
+            return nov;
         }
 
-        // Update countdown
-        function updateCountdown() {
+        function update() {
             const now = new Date();
-            
-            // Main countdown
-            let timeLeft = targetDate - now;
-            
-            if (timeLeft <= 0) {
+            const diff = TARGET - now;
+
+            if (diff <= 0) {
                 document.getElementById('days').textContent = '0';
                 document.getElementById('hours').textContent = '0';
                 document.getElementById('minutes').textContent = '0';
                 document.getElementById('seconds').textContent = '0';
             } else {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                
-                document.getElementById('days').textContent = days;
-                document.getElementById('hours').textContent = hours;
-                document.getElementById('minutes').textContent = minutes;
-                document.getElementById('seconds').textContent = seconds;
+                document.getElementById('days').textContent = Math.floor(diff / 86400000);
+                document.getElementById('hours').textContent = Math.floor((diff % 86400000) / 3600000);
+                document.getElementById('minutes').textContent = Math.floor((diff % 3600000) / 60000);
+                document.getElementById('seconds').textContent = Math.floor((diff % 60000) / 1000);
             }
-            
-            // November countdown
-            const novemberTarget = getNextNovember();
-            const timeLeftNovember = novemberTarget - now;
-            const daysNovember = Math.floor(timeLeftNovember / (1000 * 60 * 60 * 24));
-            
-            document.getElementById('novemberCountdown').textContent = 
-                `⏰ ماوە بۆ مانگی 11: ${daysNovember} ڕۆژ`;
+
+            // November
+            const novTarget = getNextNovember();
+            const novDiff = novTarget - now;
+            const novDays = Math.floor(novDiff / 86400000);
+            document.getElementById('novBox').textContent = `⏰ ماوە بۆ مانگی 11: ${novDays} ڕۆژ`;
         }
 
-        // Music control
-        let musicPlaying = false;
-
-        function toggleMusic() {
-            const music = document.getElementById('bgMusic');
-            const musicBtn = document.getElementById('musicBtn');
-            
-            if (musicPlaying) {
-                music.pause();
-                musicBtn.textContent = '🎵 موزیک (کوژاوە)';
-                musicPlaying = false;
-            } else {
-                music.play().catch(e => {
-                    console.log('Auto-play blocked, click to play');
-                });
-                musicBtn.textContent = '🎵 موزیک (ڕاهاتووە)';
-                musicPlaying = true;
-            }
-        }
-
-        // Auto-play music on first user interaction
-        document.addEventListener('click', function() {
-            const music = document.getElementById('bgMusic');
-            if (!musicPlaying) {
-                music.play().then(() => {
-                    document.getElementById('musicBtn').textContent = '🎵 موزیک (ڕاهاتووە)';
-                    musicPlaying = true;
-                }).catch(e => {
-                    console.log('Could not auto-play:', e);
-                });
-            }
-        }, { once: true });
-
-        // Initialize
+        // ============ INIT ============
         createStars();
-        updateCountdown();
-        
-        // Update every second
-        setInterval(updateCountdown, 1000);
-
-        // Try to start music
-        window.addEventListener('load', function() {
-            const music = document.getElementById('bgMusic');
-            music.play().then(() => {
-                document.getElementById('musicBtn').textContent = '🎵 موزیک (ڕاهاتووە)';
-                musicPlaying = true;
-            }).catch(e => {
-                console.log('Click anywhere to start music');
-                document.getElementById('musicBtn').textContent = '🎵 موزیک (کلیک بکە)';
-            });
-        });
+        update();
+        setInterval(update, 1000);
     </script>
 </body>
 </html>
