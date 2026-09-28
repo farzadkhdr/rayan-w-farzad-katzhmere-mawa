@@ -38,32 +38,33 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.45);
       z-index: -1;
     }
 
-    /* Main Container */
+    /* Main Container - Compact */
     .container {
       text-align: center;
-      background: rgba(0, 0, 0, 0.65);
-      padding: 30px;
-      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 18px 20px;
+      border-radius: 16px;
       backdrop-filter: blur(8px);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-      max-width: 90%;
-      width: 450px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      max-width: 85%;
+      width: 320px;
       cursor: pointer;
+      user-select: none;
     }
 
-    /* Planet Image Styling */
+    /* Planet Image Styling - Compact */
     .planet-container {
-      width: 180px;
-      height: 180px;
-      margin: 0 auto 20px auto;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 12px auto;
       border-radius: 50%;
       overflow: hidden;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
-      border: 3px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.8);
     }
 
     .planet-img {
@@ -71,69 +72,72 @@
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
-      transition: opacity 0.1s ease-in-out;
     }
 
     /* Countdown Display */
     .countdown-title {
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-      letter-spacing: 1px;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
     }
 
     .timer {
       display: flex;
-      justify-content: space-around;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 6px;
+      dir: ltr; /* English alignment for numbers */
     }
 
     .time-box {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 10px;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 6px 4px;
+      border-radius: 8px;
       flex: 1;
     }
 
-    .time-box span {
+    .number {
+      font-size: 1.25rem;
+      font-weight: bold;
+      font-family: Arial, sans-serif; /* Standard English Number Font */
       display: block;
     }
 
-    .number {
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
     .label {
-      font-size: 0.8rem;
-      opacity: 0.8;
-      margin-top: 5px;
+      font-size: 0.7rem;
+      opacity: 0.85;
+      margin-top: 2px;
+      display: block;
     }
 
     .click-notice {
-      font-size: 0.8rem;
-      margin-top: 15px;
-      opacity: 0.7;
+      font-size: 0.75rem;
+      margin-top: 12px;
+      color: #ffd700;
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
 
+  <!-- Background Video -->
   <video class="video-bg" autoplay loop muted playsinline>
     <source src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/From%20Klickpin.com-%20Simple%20public%20policy%20thoughts%20for%20people%20who%20love%20beauty%20for%20busy%20days%20that%20keep%20things%20grounded-pin-id-761108405824554742.mp4" type="video/mp4">
   </video>
 
   <div class="overlay"></div>
 
+  <!-- Audio Element (Direct Raw Stream) -->
   <audio id="bg-audio" loop preload="auto">
     <source src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3" type="audio/mp3">
   </audio>
 
+  <!-- Main Container -->
   <div class="container" id="main-card">
     <div class="planet-container">
       <img id="planet" class="planet-img" src="" alt="Planet View">
     </div>
 
-    <div class="countdown-title">کاتی ماوە بۆ ۱۱ / ۱۱ / ۲۰۲۶</div>
+    <div class="countdown-title">کاتی ماوە بۆ 11 / 11 / 2026</div>
 
     <div class="timer">
       <div class="time-box">
@@ -154,11 +158,11 @@
       </div>
     </div>
 
-    <div class="click-notice" id="click-status">کلیک بکە بۆ لێدانی دەنگەکە 🔊</div>
+    <div class="click-notice" id="click-status">لە هەر شوێنێک کلیک بکە بۆ لێدانی دەنگەکە 🔊</div>
   </div>
 
   <script>
-    // Image Slider Configuration (Planet effect)
+    // Image Slider Configuration
     const images = [
       "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_0009.jpeg",
       "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_0359.jpeg",
@@ -175,27 +179,30 @@
     const planetImg = document.getElementById('planet');
     planetImg.src = images[0];
 
-    // High speed image change (every 250ms)
+    // High speed image swap (every 200ms)
     setInterval(() => {
       currentImgIndex = (currentImgIndex + 1) % images.length;
       planetImg.src = images[currentImgIndex];
-    }, 250);
+    }, 200);
 
-    // Audio Play Control on Click
+    // Audio Play Control (Works on any user interaction)
     const audio = document.getElementById('bg-audio');
-    const mainCard = document.getElementById('main-card');
     const clickStatus = document.getElementById('click-status');
 
-    window.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play().then(() => {
-          clickStatus.innerText = "دەنگەکە کارا بوو ♪";
-        }).catch(err => console.log(err));
-      }
-    });
+    function startAudio() {
+      audio.play().then(() => {
+        clickStatus.innerText = "دەنگەکە دەستی پێکرد ♪";
+        clickStatus.style.color = "#00ff88";
+      }).catch(err => {
+        console.log("Audio play error:", err);
+      });
+    }
+
+    document.body.addEventListener('click', startAudio, { once: true });
+    document.body.addEventListener('touchstart', startAudio, { once: true });
 
     // Countdown Logic (Target: 11/11/2026)
-    const targetDate = new Date('November 11, 2026 00:00:00').getTime();
+    const targetDate = new Date('2026-11-11T00:00:00').getTime();
 
     function updateCountdown() {
       const now = new Date().getTime();
@@ -207,12 +214,13 @@
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
+        // Standard English Digits
         document.getElementById('days').innerText = String(days).padStart(2, '0');
         document.getElementById('hours').innerText = String(hours).padStart(2, '0');
         document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
         document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
       } else {
-        document.querySelector('.countdown-title').innerText = "کاتی دیاریکراو گەیشت!";
+        document.querySelector('.countdown-title').innerText = "11 / 11 / 2026";
       }
     }
 
