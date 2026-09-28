@@ -1,387 +1,223 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ku">
+<html lang="ku" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ڕەیان و فەرزاد - کاژێری ماوە</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کاتژمێری ماوە</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
 
-        body {
-            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
-            background: radial-gradient(ellipse at center, #1a1a3e 0%, #0a0a1e 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
+    /* Background Video Container */
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
 
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: -1;
+    }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 1.5s infinite alternate;
-        }
+    /* Main Container */
+    .container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.65);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      max-width: 90%;
+      width: 450px;
+      cursor: pointer;
+    }
 
-        @keyframes twinkle {
-            0% { opacity: 0.2; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.2); }
-        }
+    /* Planet Image Styling */
+    .planet-container {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 20px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+      border: 3px solid rgba(255, 255, 255, 0.8);
+    }
 
-        .main-card {
-            position: relative;
-            z-index: 1;
-            background: rgba(0, 0, 0, 0.75);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 25px 30px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-        }
+    .planet-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      transition: opacity 0.1s ease-in-out;
+    }
 
-        .title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #FFD700;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-            margin-bottom: 5px;
-        }
+    /* Countdown Display */
+    .countdown-title {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
 
-        .subtitle {
-            font-size: 13px;
-            color: #aaaaaa;
-            margin-bottom: 25px;
-        }
+    .timer {
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+    }
 
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 25px;
-        }
+    .time-box {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 10px;
+      border-radius: 10px;
+      flex: 1;
+    }
 
-        .countdown-box {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 12px 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+    .time-box span {
+      display: block;
+    }
 
-        .countdown-box .number {
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 1;
-        }
+    .number {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
 
-        .countdown-box .label {
-            font-size: 11px;
-            color: #aaaaaa;
-            margin-top: 4px;
-        }
+    .label {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
 
-        .box-days .number { color: #4CAF50; }
-        .box-hours .number { color: #2196F3; }
-        .box-minutes .number { color: #FF9800; }
-        .box-seconds .number { color: #F44336; }
-
-        .november-box {
-            font-size: 14px;
-            color: #FF69B4;
-            background: rgba(255, 105, 180, 0.08);
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 105, 180, 0.2);
-        }
-
-        .planet-img {
-            width: 120px;
-            height: auto;
-            border-radius: 10px;
-            opacity: 0.85;
-            box-shadow: 0 0 20px rgba(100, 100, 255, 0.2);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        /* Start overlay - the key to autoplay! */
-        .start-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            cursor: pointer;
-            transition: opacity 0.5s;
-        }
-
-        .start-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .start-content {
-            text-align: center;
-        }
-
-        .start-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .start-text {
-            color: #FFD700;
-            font-size: 24px;
-            margin-bottom: 10px;
-            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
-        }
-
-        .start-subtext {
-            color: #aaa;
-            font-size: 16px;
-            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
-        }
-
-        .music-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-            font-family: 'Noto Naskh Arabic', 'Arial', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .music-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .music-btn.playing {
-            border-color: #4CAF50;
-            color: #4CAF50;
-            background: rgba(76, 175, 80, 0.2);
-        }
-    </style>
+    .click-notice {
+      font-size: 0.8rem;
+      margin-top: 15px;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-    <!-- Start overlay - one click starts everything! -->
-    <div class="start-overlay" id="startOverlay">
-        <div class="start-content">
-            <div class="start-icon">🚀</div>
-            <div class="start-text">کلیک بکە بۆ دەستپێکردن</div>
-            <div class="start-subtext">موزیک و کاژێری ماوە</div>
-        </div>
+
+  <video class="video-bg" autoplay loop muted playsinline>
+    <source src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/From%20Klickpin.com-%20Simple%20public%20policy%20thoughts%20for%20people%20who%20love%20beauty%20for%20busy%20days%20that%20keep%20things%20grounded-pin-id-761108405824554742.mp4" type="video/mp4">
+  </video>
+
+  <div class="overlay"></div>
+
+  <audio id="bg-audio" loop preload="auto">
+    <source src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3" type="audio/mp3">
+  </audio>
+
+  <div class="container" id="main-card">
+    <div class="planet-container">
+      <img id="planet" class="planet-img" src="" alt="Planet View">
     </div>
 
-    <!-- Stars -->
-    <div class="stars" id="stars"></div>
+    <div class="countdown-title">کاتی ماوە بۆ ۱۱ / ۱۱ / ۲۰۲۶</div>
 
-    <!-- Music -->
-    <audio id="bgMusic" loop preload="auto"></audio>
-    
-    <button class="music-btn playing" id="musicBtn" onclick="toggleMusic()">🎵 موزیک ڕاهاتووە</button>
-
-    <!-- Main card -->
-    <div class="main-card">
-        <h1 class="title">ڕەیان و فەرزاد</h1>
-        <p class="subtitle">کاژێری ماوە بۆ 12/12/2026</p>
-
-        <div class="countdown-grid">
-            <div class="countdown-box box-days">
-                <div class="number" id="days">0</div>
-                <div class="label">ڕۆژ</div>
-            </div>
-            <div class="countdown-box box-hours">
-                <div class="number" id="hours">0</div>
-                <div class="label">کاتژمێر</div>
-            </div>
-            <div class="countdown-box box-minutes">
-                <div class="number" id="minutes">0</div>
-                <div class="label">خولەک</div>
-            </div>
-            <div class="countdown-box box-seconds">
-                <div class="number" id="seconds">0</div>
-                <div class="label">چرکە</div>
-            </div>
-        </div>
-
-        <div class="november-box" id="novBox">⏰ ماوە بۆ مانگی 11: ... ڕۆژ</div>
-
-        <img 
-            src="https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/IMG_8805.png?raw=true" 
-            alt="هەسارە"
-            class="planet-img"
-            onerror="this.style.display='none'"
-        >
+    <div class="timer">
+      <div class="time-box">
+        <span class="number" id="days">00</span>
+        <span class="label">ڕۆژ</span>
+      </div>
+      <div class="time-box">
+        <span class="number" id="hours">00</span>
+        <span class="label">کاتژمێر</span>
+      </div>
+      <div class="time-box">
+        <span class="number" id="minutes">00</span>
+        <span class="label">خولەک</span>
+      </div>
+      <div class="time-box">
+        <span class="number" id="seconds">00</span>
+        <span class="label">چرکە</span>
+      </div>
     </div>
 
-    <script>
-        const MUSIC_URL = 'https://github.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/blob/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3?raw=true';
-        
-        // ============ STARS ============
-        function createStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 150; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 2 + 1;
-                star.style.cssText = `
-                    left: ${Math.random() * 100}%;
-                    top: ${Math.random() * 100}%;
-                    width: ${size}px;
-                    height: ${size}px;
-                    animation-delay: ${Math.random() * 2}s;
-                `;
-                container.appendChild(star);
-            }
-        }
+    <div class="click-notice" id="click-status">کلیک بکە بۆ لێدانی دەنگەکە 🔊</div>
+  </div>
 
-        // ============ MUSIC AUTO-PLAY ON FIRST CLICK ============
-        const audio = document.getElementById('bgMusic');
-        const musicBtn = document.getElementById('musicBtn');
-        const startOverlay = document.getElementById('startOverlay');
-        let isPlaying = false;
+  <script>
+    // Image Slider Configuration (Planet effect)
+    const images = [
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_0009.jpeg",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_0359.jpeg",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_0482.jpeg",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_4338.png",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_4551.png",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_4648.jpeg",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_5253.jpeg",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_5254.jpeg",
+      "https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/IMG_7613.jpeg"
+    ];
 
-        function startEverything() {
-            // Load and play music
-            audio.src = MUSIC_URL;
-            audio.load();
-            
-            audio.play().then(() => {
-                isPlaying = true;
-                updateMusicButton();
-            }).catch(err => {
-                console.log('Music playback failed:', err);
-                isPlaying = false;
-                updateMusicButton();
-            });
-            
-            // Hide overlay
-            startOverlay.classList.add('hidden');
-            setTimeout(() => {
-                startOverlay.style.display = 'none';
-            }, 500);
-        }
+    let currentImgIndex = 0;
+    const planetImg = document.getElementById('planet');
+    planetImg.src = images[0];
 
-        function updateMusicButton() {
-            if (isPlaying) {
-                musicBtn.textContent = '🎵 موزیک ڕاهاتووە';
-                musicBtn.classList.add('playing');
-            } else {
-                musicBtn.textContent = '🎵 دەستپێکردنی موزیک';
-                musicBtn.classList.remove('playing');
-            }
-        }
+    // High speed image change (every 250ms)
+    setInterval(() => {
+      currentImgIndex = (currentImgIndex + 1) % images.length;
+      planetImg.src = images[currentImgIndex];
+    }, 250);
 
-        function toggleMusic() {
-            if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-            } else {
-                if (!audio.src) {
-                    audio.src = MUSIC_URL;
-                    audio.load();
-                }
-                audio.play().then(() => {
-                    isPlaying = true;
-                }).catch(() => {
-                    isPlaying = false;
-                });
-            }
-            updateMusicButton();
-        }
+    // Audio Play Control on Click
+    const audio = document.getElementById('bg-audio');
+    const mainCard = document.getElementById('main-card');
+    const clickStatus = document.getElementById('click-status');
 
-        // THE KEY: Click overlay starts music automatically
-        startOverlay.addEventListener('click', startEverything);
-        
-        // Also keyboard support
-        document.addEventListener('keydown', function(e) {
-            if (startOverlay.style.display !== 'none') {
-                startEverything();
-            }
-        });
+    window.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play().then(() => {
+          clickStatus.innerText = "دەنگەکە کارا بوو ♪";
+        }).catch(err => console.log(err));
+      }
+    });
 
-        // ============ COUNTDOWN ============
-        const TARGET = new Date(2026, 11, 12, 0, 0, 0);
+    // Countdown Logic (Target: 11/11/2026)
+    const targetDate = new Date('November 11, 2026 00:00:00').getTime();
 
-        function getNextNovember() {
-            const now = new Date();
-            let nov = new Date(now.getFullYear(), 10, 1);
-            if (now > nov) nov = new Date(now.getFullYear() + 1, 10, 1);
-            return nov;
-        }
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
 
-        function update() {
-            const now = new Date();
-            const diff = TARGET - now;
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-            if (diff <= 0) {
-                document.getElementById('days').textContent = '0';
-                document.getElementById('hours').textContent = '0';
-                document.getElementById('minutes').textContent = '0';
-                document.getElementById('seconds').textContent = '0';
-            } else {
-                document.getElementById('days').textContent = Math.floor(diff / 86400000);
-                document.getElementById('hours').textContent = Math.floor((diff % 86400000) / 3600000);
-                document.getElementById('minutes').textContent = Math.floor((diff % 3600000) / 60000);
-                document.getElementById('seconds').textContent = Math.floor((diff % 60000) / 1000);
-            }
+        document.getElementById('days').innerText = String(days).padStart(2, '0');
+        document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+      } else {
+        document.querySelector('.countdown-title').innerText = "کاتی دیاریکراو گەیشت!";
+      }
+    }
 
-            const novTarget = getNextNovember();
-            const novDiff = novTarget - now;
-            const novDays = Math.floor(novDiff / 86400000);
-            document.getElementById('novBox').textContent = `⏰ ماوە بۆ مانگی 11: ${novDays} ڕۆژ`;
-        }
-
-        // ============ INIT ============
-        createStars();
-        update();
-        setInterval(update, 1000);
-        
-        // Initialize button state
-        updateMusicButton();
-    </script>
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
 </body>
 </html>
