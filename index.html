@@ -19,6 +19,7 @@
       justify-content: center;
       align-items: center;
       color: #fff;
+      background-color: #000;
     }
 
     /* Background Video Container */
@@ -42,7 +43,45 @@
       z-index: -1;
     }
 
-    /* Main Container - Compact */
+    /* Start Button Overlay Screen */
+    #start-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .start-btn {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 15px 30px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      color: #fff;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    .start-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+    }
+
+    /* Main Container (Hidden by default) */
     .container {
       text-align: center;
       background: rgba(0, 0, 0, 0.7);
@@ -52,11 +91,17 @@
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
       max-width: 85%;
       width: 320px;
-      cursor: pointer;
-      user-select: none;
+      display: none; /* Sharawa ta klik dakre */
+      opacity: 0;
+      transition: opacity 0.8s ease;
     }
 
-    /* Planet Image Styling - Compact */
+    .container.show {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Planet Image Styling */
     .planet-container {
       width: 110px;
       height: 110px;
@@ -85,7 +130,7 @@
       display: flex;
       justify-content: space-between;
       gap: 6px;
-      dir: ltr; /* English alignment for numbers */
+      dir: ltr;
     }
 
     .time-box {
@@ -98,7 +143,7 @@
     .number {
       font-size: 1.25rem;
       font-weight: bold;
-      font-family: Arial, sans-serif; /* Standard English Number Font */
+      font-family: Arial, sans-serif;
       display: block;
     }
 
@@ -107,13 +152,6 @@
       opacity: 0.85;
       margin-top: 2px;
       display: block;
-    }
-
-    .click-notice {
-      font-size: 0.75rem;
-      margin-top: 12px;
-      color: #ffd700;
-      opacity: 0.9;
     }
   </style>
 </head>
@@ -126,12 +164,17 @@
 
   <div class="overlay"></div>
 
-  <!-- Audio Element (Direct Raw Stream) -->
+  <!-- Audio Element -->
   <audio id="bg-audio" loop preload="auto">
     <source src="https://raw.githubusercontent.com/farzadkhdr/rayan-w-farzad-katzhmere-mawa/main/vidssave.com%20INTERSTELLAR%20%E2%80%93%20Hans%20Zimmer%20-%204k%20720P%202.mp3" type="audio/mp3">
   </audio>
 
-  <!-- Main Container -->
+  <!-- Start Button Screen -->
+  <div id="start-overlay">
+    <div class="start-btn">داگرە بۆ دەستپێکردن ✦</div>
+  </div>
+
+  <!-- Main Card -->
   <div class="container" id="main-card">
     <div class="planet-container">
       <img id="planet" class="planet-img" src="" alt="Planet View">
@@ -157,8 +200,6 @@
         <span class="label">چرکە</span>
       </div>
     </div>
-
-    <div class="click-notice" id="click-status">لە هەر شوێنێک کلیک بکە بۆ لێدانی دەنگەکە 🔊</div>
   </div>
 
   <script>
@@ -185,21 +226,21 @@
       planetImg.src = images[currentImgIndex];
     }, 200);
 
-    // Audio Play Control (Works on any user interaction)
+    // Audio and Screen Reveal Logic
     const audio = document.getElementById('bg-audio');
-    const clickStatus = document.getElementById('click-status');
+    const startOverlay = document.getElementById('start-overlay');
+    const mainCard = document.getElementById('main-card');
 
-    function startAudio() {
-      audio.play().then(() => {
-        clickStatus.innerText = "دەنگەکە دەستی پێکرد ♪";
-        clickStatus.style.color = "#00ff88";
-      }).catch(err => {
-        console.log("Audio play error:", err);
-      });
-    }
+    startOverlay.addEventListener('click', () => {
+      // Play Audio
+      audio.play().catch(err => console.log("Audio play error:", err));
 
-    document.body.addEventListener('click', startAudio, { once: true });
-    document.body.addEventListener('touchstart', startAudio, { once: true });
+      // Hide start button overlay
+      startOverlay.style.display = 'none';
+
+      // Show Main Card
+      mainCard.classList.add('show');
+    });
 
     // Countdown Logic (Target: 11/11/2026)
     const targetDate = new Date('2026-11-11T00:00:00').getTime();
@@ -214,7 +255,6 @@
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        // Standard English Digits
         document.getElementById('days').innerText = String(days).padStart(2, '0');
         document.getElementById('hours').innerText = String(hours).padStart(2, '0');
         document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
